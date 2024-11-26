@@ -21,11 +21,13 @@ class BookkeepingController extends Controller
     public function displayRecord()
     {
         $product = Product::all();
+        // Only select the record with status 1/2 (closed/opened) only. (exclude 0 = removed record)
+        $record = Record::where('recordStatus', '!=', '0')->get();
 
         // Get the latest record for the current user
         $latestRecord = Record::where('userId', Auth::user()->id)->latest()->first();
 
-        return view('ManageBookkeepingView.owner.recordList', ['product' => $product, 'latestRecord' => $latestRecord]);
+        return view('ManageBookkeepingView.owner.recordList', ['product' => $product, 'latestRecord' => $latestRecord, 'record' => $record]);
     }
 
     /**
@@ -86,7 +88,7 @@ class BookkeepingController extends Controller
         $record->recordBalance = $latestRecord->recordBalance;  // Use the previous record's balance
         $record->recordRevenue = null;
         $record->recordExpenses = null;
-        $record->recordStatus = 3; // Closed status
+        $record->recordStatus = 1; // Closed status
         $record->save();
 
         // Return a JSON response for AJAX success
@@ -149,5 +151,22 @@ class BookkeepingController extends Controller
 
         // Return a response (optional)
         return redirect()->back()->with('success', 'Record added successfully!');
+    }
+
+    /**
+     * Remove the record from the table
+     */
+    public function removeRecord(Request $request, $id)
+    {
+        $record = Record::where('id', $id)->first();
+
+        $request -> validate([
+            'recordStatus' => ['required', 'integer'],
+        ]);
+
+        $record->recordStatus = $request->recordStatus;
+        $record->save();
+
+        return redirect()->route('display.record.owner')->with('destroy', 'A record has been removed successfully');
     }
 }

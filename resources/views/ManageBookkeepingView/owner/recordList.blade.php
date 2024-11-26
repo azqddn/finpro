@@ -26,7 +26,7 @@
                         <div class="d-flex justify-content-center" style="flex: 1;">
                             {{-- Search Div --}}
                             <div class="d-flex align-items-center pt-3 ps-2 pe-2"
-                                style="border: 1px solid rgb(134, 134, 134); border-radius:10px; width:400px; height:35px">
+                                style="border: 1px solid rgb(134, 134, 134); border-radius:10px; width:400px; height:35px; box-shadow: 1px 1px 10px #00000042;">
                                 {{-- Seach Input --}}
                                 <form action="" method="GET"
                                     class="d-flex justify-content-between align-items-center"
@@ -69,41 +69,57 @@
 
                     {{-- mid --}}
                     <div class="d-flex justify-content-between align-items-center pt-3 mb-2">
-                        <p>Status :
-                            <span id="statusText" style="color: rgb(0, 81, 255)">
+                        <p>Status:
+                            @if ($latestRecord->recordStatus == 2)
+                                <span id="statusText" class="px-3"
+                                    style="color:rgb(255, 255, 255); background-color: rgb(30, 105, 255); padding:5px; border-radius:12px">
+                                    Opened
+                                </span>
+                            @else
+                                <span id="statusText" class="px-3"
+                                    style="color:rgb(255, 255, 255); background-color: rgb(255, 55, 55); padding:5px; border-radius:12px">
+                                    Closed
+                                </span>
+                            @endif
+                            {{-- <span id="statusText" class="px-3"
+                                style="color:rgb(255, 255, 255); background-color: rgb(30, 105, 255); padding:5px; border-radius:12px">
                                 {{ $latestRecord->recordStatus == 2 ? 'Opened' : 'Closed' }}
-                            </span>
+                            </span> --}}
                         </p>
+                        {{-- 0:Removed | 1:Closed | 2:Opened  --}}
                         <div class="ms-auto">
                             <!-- Open button (only show if status is not open) -->
-                            @if ($latestRecord->recordStatus != 2)
+                            <div id="openButtonWrapper"
+                                style="display: {{ $latestRecord->recordStatus == 2 ? 'none' : 'inline' }}">
                                 <a href="javascript:void(0);" id="openButton" class="me-2" style="text-decoration: none;">
                                     <button
-                                        style="width: 55px;height:30px; background-color:rgb(255, 255, 255); border:1px solid rgb(28, 28, 255); border-radius:5px; color:rgb(28, 28, 255)">
+                                        style="width: 60px;height:30px; border:transparent; border-radius:10px; color:rgb(255, 255, 255); background-color:#3e58ff; box-shadow: 2px 2px 3px #00000042">
                                         {{ __('Open') }}
                                     </button>
                                 </a>
-                            @endif
+                            </div>
 
-                            <!-- Close button (only show if status is open) -->
-                            @if ($latestRecord->recordStatus == 2)
+                            <!-- Close button -->
+                            <div id="closeButtonWrapper"
+                                style="display: {{ $latestRecord->recordStatus == 2 ? 'inline' : 'none' }}">
                                 <a href="javascript:void(0);" id="closeButton" style="text-decoration: none;">
                                     <button
-                                        style="width: 55px;height:30px; background-color:rgb(255, 255, 255); border:1px solid red; border-radius:5px; color:red">
+                                        style="width: 60px;height:30px; border:transparent; border-radius:10px; color:rgb(255, 255, 255); background-color:#ff5454; box-shadow: 2px 2px 3px #00000042">
                                         {{ __('Close') }}
                                     </button>
                                 </a>
-                            @endif
+                            </div>
 
-                            <!-- "+" button (only show if status is open) -->
-                            @if ($latestRecord->recordStatus == 2)
+                            <!-- "+" button -->
+                            <div id="addRecordButtonWrapper"
+                                style="display: {{ $latestRecord->recordStatus == 2 ? 'inline' : 'none' }}">
                                 <a href="#" id="addRecordButton" style="text-decoration: none;">
                                     <button data-bs-toggle="modal" data-bs-target="#addRecordModal"
-                                        style="width: 55px;height:30px; background-color:rgb(28, 28, 255); border:1px solid rgb(28, 28, 255); border-radius:5px; color:white">
+                                        style="width: 60px;height:30px; background-color:rgb(78, 78, 78); border:1px solid rgb(186, 186, 186); border-radius:10px; color:white; box-shadow: 2px 2px 3px #00000042;">
                                         {{ __('+') }}
                                     </button>
                                 </a>
-                            @endif
+                            </div>
                         </div>
                     </div>
 
@@ -123,18 +139,17 @@
                                 .then(response => response.json())
                                 .then(data => {
                                     if (data.success) {
-                                        // Update the status text and toggle buttons
+                                        // Update the DOM
                                         document.getElementById('statusText').innerText = 'Opened';
-                                        document.getElementById('openButton').style.display = 'none';
-                                        document.getElementById('closeButton').style.display = 'inline';
-                                        document.getElementById('addRecordButton').style.display = 'inline';
+                                        document.getElementById('openButtonWrapper').style.display = 'none';
+                                        document.getElementById('closeButtonWrapper').style.display = 'inline';
+                                        document.getElementById('addRecordButtonWrapper').style.display = 'inline';
                                     }
                                 })
                                 .catch(error => console.error('Error:', error));
                         });
 
                         document.getElementById('closeButton')?.addEventListener('click', function() {
-                            // Send AJAX request to create the "Closing" record
                             fetch('{{ route('store.close.record.owner') }}', {
                                     method: 'POST',
                                     headers: {
@@ -148,20 +163,22 @@
                                 .then(response => response.json())
                                 .then(data => {
                                     if (data.success) {
-                                        // Update the status text and toggle buttons
+                                        // Update the DOM
                                         document.getElementById('statusText').innerText = 'Closed';
-                                        document.getElementById('closeButton').style.display = 'none';
-                                        document.getElementById('addRecordButton').style.display =
-                                        'none'; // Hide the "+" button
+                                        document.getElementById('closeButtonWrapper').style.display = 'none';
+                                        document.getElementById('addRecordButtonWrapper').style.display = 'none';
+                                        document.getElementById('openButtonWrapper').style.display = 'inline';
                                     }
                                 })
                                 .catch(error => console.error('Error:', error));
                         });
                     </script>
 
+
+
                     {{-- table --}}
                     <div>
-                        <table class="table table-bordered">
+                        <table id="record-list-table" class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th scope="col">No.</th>
@@ -175,115 +192,54 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                    <td class="d-flex justify-content-center">
-                                        <button class="btn btn-link p-0" type="button" id="dropdownMenuButton"
-                                            data-bs-toggle="dropdown" aria-expanded="false" style="color: #000000;">
-                                            <svg width="4" height="14" viewBox="0 0 3 14" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <ellipse cx="1.5" cy="1.55687" rx="1.5" ry="1.55687"
-                                                    fill="#171717" />
-                                                <ellipse cx="1.5" cy="7.00023" rx="1.5" ry="1.55687"
-                                                    fill="#171717" />
-                                                <ellipse cx="1.5" cy="12.4436" rx="1.5" ry="1.55687"
-                                                    fill="#171717" />
-                                            </svg>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
-                                            style="min-width: 100px; font-size: 14px; padding: 4px;">
-                                            {{-- Edit --}}
-                                            <li>
-                                                <a class="dropdown-item" href="">
-                                                    Edit
-                                                </a>
-                                            </li>
-                                            <hr style="margin: 4px 0;">
-                                            {{-- Remove --}}
-                                            <li>
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                    data-bs-target="#removeModal" onclick="">
-                                                    Remove
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                    <td class="d-flex justify-content-center">
-                                        <button class="btn btn-link p-0" type="button" id="dropdownMenuButton"
-                                            data-bs-toggle="dropdown" aria-expanded="false" style="color: #000000;">
-                                            <svg width="4" height="14" viewBox="0 0 3 14" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <ellipse cx="1.5" cy="1.55687" rx="1.5" ry="1.55687"
-                                                    fill="#171717" />
-                                                <ellipse cx="1.5" cy="7.00023" rx="1.5" ry="1.55687"
-                                                    fill="#171717" />
-                                                <ellipse cx="1.5" cy="12.4436" rx="1.5" ry="1.55687"
-                                                    fill="#171717" />
-                                            </svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                    <td class="d-flex justify-content-center">
-                                        <button class="btn btn-link p-0" type="button" id="dropdownMenuButton"
-                                            data-bs-toggle="dropdown" aria-expanded="false" style="color: #000000;">
-                                            <svg width="4" height="14" viewBox="0 0 3 14" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <ellipse cx="1.5" cy="1.55687" rx="1.5" ry="1.55687"
-                                                    fill="#171717" />
-                                                <ellipse cx="1.5" cy="7.00023" rx="1.5" ry="1.55687"
-                                                    fill="#171717" />
-                                                <ellipse cx="1.5" cy="12.4436" rx="1.5" ry="1.55687"
-                                                    fill="#171717" />
-                                            </svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                    <td class="d-flex justify-content-center">
-                                        <button class="btn btn-link p-0" type="button" id="dropdownMenuButton"
-                                            data-bs-toggle="dropdown" aria-expanded="false" style="color: #000000;">
-                                            <svg width="4" height="14" viewBox="0 0 3 14" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <ellipse cx="1.5" cy="1.55687" rx="1.5" ry="1.55687"
-                                                    fill="#171717" />
-                                                <ellipse cx="1.5" cy="7.00023" rx="1.5" ry="1.55687"
-                                                    fill="#171717" />
-                                                <ellipse cx="1.5" cy="12.4436" rx="1.5" ry="1.55687"
-                                                    fill="#171717" />
-                                            </svg>
-                                        </button>
-                                    </td>
-                                </tr>
+                                @foreach ($record as $record)
+                                    <tr>
+                                        <th scope="row">{{ $loop->iteration }}</th>
+                                        <td>{{ $record->recordDesc }}</td>
+                                        <td>{{ $record->recordRevenue }}</td>
+                                        <td>{{ $record->recordExpenses }}</td>
+                                        <td>{{ $record->recordBalance }}</td>
+                                        <td></td>
+                                        <td>{{ $record->recordNotes }}</td>
+                                        <td class="d-flex justify-content-center">
+                                            <button class="btn btn-link p-0" type="button" id="dropdownMenuButton"
+                                                data-bs-toggle="dropdown" aria-expanded="false" style="color: #000000;">
+                                                <svg width="4" height="14" viewBox="0 0 3 14" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <ellipse cx="1.5" cy="1.55687" rx="1.5" ry="1.55687"
+                                                        fill="#171717" />
+                                                    <ellipse cx="1.5" cy="7.00023" rx="1.5" ry="1.55687"
+                                                        fill="#171717" />
+                                                    <ellipse cx="1.5" cy="12.4436" rx="1.5" ry="1.55687"
+                                                        fill="#171717" />
+                                                </svg>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                                                style="min-width: 100px; font-size: 14px; padding: 4px;">
+                                                {{-- Edit --}}
+                                                <li>
+                                                    <a class="dropdown-item" href="">
+                                                        Edit
+                                                    </a>
+                                                </li>
+                                                <hr style="margin: 4px 0;">
+                                                {{-- Remove --}}
+                                                <li>
+                                                    <form
+                                                        action="{{ url('owner/bookkeeping/' . $record->id . '/record/remove') }}">
+                                                        {{-- <a class="dropdown-item" href=""
+                                                            data-bs-toggle="modal" data-bs-target="#removeModal"
+                                                            onclick=""> --}}
+                                                        {{-- change the value of record status and pass to the controller --}}
+                                                        <input type="hidden" name="recordStatus" value="0">
+                                                        <button type="submit">remove</button>
+                                                        {{-- </a> --}}
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -310,7 +266,7 @@
             </div>
             <!-- Modal Body -->
             <div class="modal-body">
-                <form action="{{route('store.record.owner')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('store.record.owner') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <!-- Radio buttons to choose between Revenue or Expenses -->
@@ -349,7 +305,8 @@
                             <!-- Dynamic dropdowns and integer inputs will be added here -->
                         </div>
                         <!-- Button to add more dropdowns and inputs -->
-                        <button type="button" class="btn btn-outline-primary mt-2" style="width: 100%" id="addDropdownBtn" onclick="addDropdown()">
+                        <button type="button" class="btn btn-outline-primary mt-2" style="width: 100%"
+                            id="addDropdownBtn" onclick="addDropdown()">
                             +
                         </button>
                     </div>
@@ -435,3 +392,9 @@
         container.appendChild(newDropdownDiv);
     }
 </script>
+
+<style>
+    #record-list-table th {
+        color: #9f9f9f;
+    }
+</style>

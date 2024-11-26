@@ -82,7 +82,7 @@
                     </a>
                 </li>
                 {{-- Budget --}}
-                <li id="menu-list" style="margin-bottom: 10px">
+                {{-- <li id="menu-list" style="margin-bottom: 10px">
                     <a href="#" class="nav-link link-dark">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
                             fill="currentColor">
@@ -92,7 +92,7 @@
                         </svg>
                         <span id="menu">Budget</span>
                     </a>
-                </li>
+                </li> --}}
                 {{-- Report --}}
                 <li id="menu-list" style="margin-bottom: 10px">
                     <a href="#" class="nav-link link-dark">

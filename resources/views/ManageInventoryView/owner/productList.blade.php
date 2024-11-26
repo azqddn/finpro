@@ -127,7 +127,6 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             @foreach ($product as $product)
                                 <tr>
                                     <th scope="row" style="border: 1px solid #dee2e6;">{{ $loop->iteration }}</th>
@@ -224,6 +223,7 @@
                 <form method="POST" action="" id="removeForm">
                     @csrf
                     <input type="hidden" id="productId" name="productId">
+                    {{-- change the value of product status and pass to the controller --}}
                     <input type="hidden" id="productStatus" name="productStatus" value="0">
                     <button type="submit" class="btn btn-primary">Delete</button>
                 </form>

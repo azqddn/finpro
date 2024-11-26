@@ -88,7 +88,7 @@ Route::middleware(['auth', 'user-access:owner'])->group(function () {
         Route::post('/bookkeeping/record/opened',[BookkeepingController::class, 'storeOpeningRecord'])->name('store.open.record.owner');
         Route::post('/bookkeeping/record/closed',[BookkeepingController::class, 'storeClosingRecord'])->name('store.close.record.owner');
         Route::post('/bookkeeping/record/store', [BookkeepingController::class, 'storeRecord'])->name('store.record.owner');
-
+        Route::get('/bookkeeping/{id}/record/remove', [BookkeepingController::class, 'removeRecord'])->name('remove.record.owner');
 
     });
 });
@@ -111,3 +111,4 @@ Route::middleware(['auth', 'user-access:staff'])->group(function () {
         Route::get('/company/profile', [UserController::class, 'displayCompanyStaff'])->name('display.company.staff');
     });
 });
+;
