@@ -5,7 +5,7 @@
         <div class="d-flex justify-content-center" style="width: 100%; height:auto; position:relative">
             {{-- Content --}}
             <div class="mt-4 row justify-content-center" style="width:70%; height:auto">
-                <h3>Add Product</h3>
+                <h3 style="color: rgb(0, 0, 216)">Add Product</h3>
                 <div class="card my-4">
                     <div class="card-body">
                         <div class="card-header">{{ __('Product Information') }}</div>

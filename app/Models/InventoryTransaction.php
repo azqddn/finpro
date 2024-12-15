@@ -13,4 +13,7 @@ class InventoryTransaction extends Model
     {
         return $this->belongsTo(Record::class, 'id');
     }
+    protected $attributes = [
+        'transQuantity' => 0, // Default to 0 if not provided
+    ];
 }

@@ -23,16 +23,18 @@ class InventoryController extends Controller
      */
     public function displayProduct(Request $request)
     {
-        $search = $request->input('search'); // Get search query from request
+        $search = $request->input('search'); // Get search query from request for search
 
-        $productQuery = Product::with('category')->where('productStatus', '1');
 
-        // If there is a search term, filter the products by product name
+        //Default product display
+        $productQuery = Product::with('category')->where('productStatus', '1')->orderBy('created_at', 'desc');
+
+        // Display searched product
         if ($search) {
             $productQuery->where('productName', 'LIKE', "%{$search}%");
         }
 
-        $product = $productQuery->get();
+        $products = $productQuery->paginate(5);
         $category = Category::all();
 
         // For Alert Message
@@ -45,7 +47,7 @@ class InventoryController extends Controller
         })
         ->get();
 
-        return view('ManageInventoryView.owner.productList', ['product' => $product, 'category' => $category, 'alertMessage' => $alertMessage ]);
+        return view('ManageInventoryView.owner.productList', ['products' => $products, 'category' => $category, 'alertMessage' => $alertMessage ]);
     }
 
 
@@ -281,12 +283,19 @@ class InventoryController extends Controller
     /**
      * Display product history
      */
-    public function displayProductHistory()
+    public function displayProductHistory(Request $request)
     {
-        $product = Product::with('category', 'user')->get();
-        $category = Category::all();
+        $productQuery = Product::with('category', 'user')->where('productStatus', '==', '0')->orderBy('updated_at', 'desc');
 
-        return view('ManageInventoryView.owner.productHistory', ['product' => $product, 'category' => $category]);
+        // Handle Search Function
+        $search = $request->input('search');
+        if($search){
+            $productQuery = Product::with('category', 'user')->where('productName', 'like', "%$search%")->where('productStatus', '==', '0')->orderBy('updated_at', 'desc');
+        }
+
+        $product = $productQuery->paginate(10);
+
+        return view('ManageInventoryView.owner.productHistory', ['product' => $product]);
     }
 
     /**

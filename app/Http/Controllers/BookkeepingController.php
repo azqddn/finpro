@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Record;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\InventoryTransaction;
 use Illuminate\Support\Facades\Auth;
 
 class BookkeepingController extends Controller
@@ -18,14 +20,32 @@ class BookkeepingController extends Controller
     /**
      * Display All Bookkeeping Record
      */
-    public function displayRecord()
+    public function displayRecord(Request $request)
     {
-        $product = Product::all();
+        // $product = Product::all();
+        $product = Product::where('productStatus', '=', '1')->get(); //only active product only (exclude removed product where the productStatus = 0)
+
         // Only select the record with status 1/2 (closed/opened) only. (exclude 0 = removed record)
-        $record = Record::where('recordStatus', '!=', '0')->get();
+        $recordQuery = Record::where('recordStatus', '!=', '0')->with('inventoryTransaction')->orderBy('created_at', 'desc');
 
         // Get the latest record for the current user
         $latestRecord = Record::where('userId', Auth::user()->id)->latest()->first();
+
+        //Handle Searching function
+        $search = $request->input('search');
+
+        if($search){
+            $recordQuery = Record::where('recordDesc', 'like', "%$search%");
+        }
+
+        //Handle Oldest First Sort
+        $sort = $request->input('sort');
+        if($sort === 'oldest'){
+            $recordQuery = Record::orderBy('created_at', 'asc');
+        }
+
+        
+        $record = $recordQuery->paginate(20);
 
         return view('ManageBookkeepingView.owner.recordList', ['product' => $product, 'latestRecord' => $latestRecord, 'record' => $record]);
     }
@@ -101,6 +121,85 @@ class BookkeepingController extends Controller
     /**
      * Store Record
      */
+    // public function storeRecord(Request $request)
+    // {
+    //     // Validate the incoming request data
+    //     $request->validate([
+    //         'recordType' => 'required|string',
+    //         'recordDesc' => 'required|string',
+    //         'recordRevenue' => 'nullable|numeric',
+    //         'recordExpenses' => 'nullable|numeric',
+    //         'recordNotes' => 'nullable|string',
+    //         'recordProof' => 'nullable|mimes:pdf,jpeg,jpg,png|max:2048', // Limit file size to 2MB
+    //         'transId' => 'nullable|array', // Ensure transId is an array for transactions
+    //         'quantity' => 'nullable|array', // Ensure quantity is an array
+    //     ]);
+
+    //     // Retrieve the latest recordBalance from the most recent record
+    //     $latestRecord = Record::orderBy('id', 'desc')->first();
+    //     $latestBalance = $latestRecord ? $latestRecord->recordBalance : 0; // Default to 0 if no records exist
+
+    //     // Create a new Record instance
+    //     $record = new Record();
+    //     $record->userId = Auth::user()->id;
+    //     $record->recordDesc = $request->recordDesc;
+    //     $record->recordNotes = $request->recordNotes;
+    //     $record->recordStatus = 2; // Opened status
+
+    //     // Handle different record types: Revenue or Expenses
+    //     if ($request->recordType === 'revenue') {
+    //         $record->recordRevenue = $request->recordRevenue;
+    //         $record->recordExpenses = null;  // Ensure expenses is null for revenue
+    //         $record->recordBalance = $latestBalance + $request->recordRevenue; // Add revenue to balance
+    //     } elseif ($request->recordType === 'expenses') {
+    //         $record->recordRevenue = null;  // Ensure revenue is null for expenses
+    //         $record->recordExpenses = $request->recordExpenses;
+    //         $record->recordBalance = $latestBalance - $request->recordExpenses; // Subtract expenses from balance
+    //     }
+
+    //     // Handle file upload for record proof
+    //     $filePath = public_path('bookkeeping');
+    //     if ($request->hasFile('recordProof')) {
+    //         $file = $request->file('recordProof');
+    //         $file_name = time() . $file->getClientOriginalName();
+    //         $file->move($filePath, $file_name);
+    //         $record->recordProof = $file_name;
+    //     }
+
+    //     // Save the record to the database
+    //     $record->save();
+
+    //     // Handle Inventory Transactions
+    //     if ($request->has('transId') && $request->has('quantity')) {
+    //         foreach ($request->transId as $key => $productName) {
+    //             // Validate quantity
+    //             $quantity = $request->quantity[$key];
+    //             if (!$quantity || $quantity <= 0) {
+    //                 continue; // Skip invalid or empty quantities
+    //             }
+
+    //             // Find the product by its name
+    //             $product = Product::where('productName', $productName)->first();
+    //             if ($product) {
+    //                 // Deduct the quantity from the product's current stock
+    //                 $product->productQuantity -= $quantity;
+    //                 $product->save();
+
+    //                 // Create a new inventory transaction
+    //                 $transaction = new InventoryTransaction();
+    //                 $transaction->transProduct = "$productName: $quantity";
+    //                 $transaction->save();
+
+    //                 // Associate the transaction with the record
+    //                 $record->transId = $transaction->id;
+    //                 $record->save();
+    //             }
+    //         }
+    //     }
+
+    //     // Return a response (optional)
+    //     return redirect()->back()->with('success', 'Record and inventory transactions added successfully!');
+    // }
     public function storeRecord(Request $request)
     {
         // Validate the incoming request data
@@ -110,31 +209,31 @@ class BookkeepingController extends Controller
             'recordRevenue' => 'nullable|numeric',
             'recordExpenses' => 'nullable|numeric',
             'recordNotes' => 'nullable|string',
-            'recordProof' => 'nullable|mimes:pdf,jpeg,jpg,png|max:2048', // Limit the file size to 2MB
+            'recordProof' => 'nullable|mimes:pdf,jpeg,jpg,png|max:2048', // Limit file size to 2MB
+            'transId' => 'nullable|array', // Ensure transId is an array for transactions
+            'quantity' => 'nullable|array', // Ensure quantity is an array
         ]);
 
         // Retrieve the latest recordBalance from the most recent record
         $latestRecord = Record::orderBy('id', 'desc')->first();
-        $latestBalance = $latestRecord ? $latestRecord->recordBalance : 0; // Set to 0 if no records exist
+        $latestBalance = $latestRecord ? $latestRecord->recordBalance : 0; // Default to 0 if no records exist
 
         // Create a new Record instance
         $record = new Record();
         $record->userId = Auth::user()->id;
         $record->recordDesc = $request->recordDesc;
         $record->recordNotes = $request->recordNotes;
-        $record->recordStatus = 2;
+        $record->recordStatus = 2; // Opened status
 
         // Handle different record types: Revenue or Expenses
         if ($request->recordType === 'revenue') {
             $record->recordRevenue = $request->recordRevenue;
             $record->recordExpenses = null;  // Ensure expenses is null for revenue
-            // Update recordBalance by adding the revenue to the latest balance
-            $record->recordBalance = $latestBalance + $request->recordRevenue;
+            $record->recordBalance = $latestBalance + $request->recordRevenue; // Add revenue to balance
         } elseif ($request->recordType === 'expenses') {
             $record->recordRevenue = null;  // Ensure revenue is null for expenses
             $record->recordExpenses = $request->recordExpenses;
-            // Update recordBalance by subtracting the expenses from the latest balance
-            $record->recordBalance = $latestBalance - $request->recordExpenses;
+            $record->recordBalance = $latestBalance - $request->recordExpenses; // Subtract expenses from balance
         }
 
         // Handle file upload for record proof
@@ -146,12 +245,52 @@ class BookkeepingController extends Controller
             $record->recordProof = $file_name;
         }
 
-        // Save the new record to the database
+        // Save the record to the database
         $record->save();
 
+        // Handle Inventory Transactions
+        if ($request->has('transId') && $request->has('quantity')) {
+            $transProducts = []; // Array to store concatenated product details
+
+            foreach ($request->transId as $key => $productName) {
+                // Validate quantity
+                $quantity = $request->quantity[$key];
+                if (!$quantity || $quantity <= 0) {
+                    continue; // Skip invalid or empty quantities
+                }
+
+                // Find the product by its name
+                $product = Product::where('productName', $productName)->first();
+                if ($product) {
+                    // Deduct the quantity from the product's current stock
+                    $product->productQuantity -= $quantity;
+                    $product->save();
+
+                    // Add the product details to the array
+                    $transProducts[] = "$productName: $quantity";
+                }
+            }
+
+            if (!empty($transProducts)) {
+                // Concatenate all product details into a single string
+                $transProductString = implode(', ', $transProducts);
+
+                // Create a new inventory transaction
+                $transaction = new InventoryTransaction();
+                $transaction->transProduct = $transProductString;
+                $transaction->save();
+
+                // Associate the transaction with the record
+                $record->transId = $transaction->id;
+                $record->save();
+            }
+        }
+
         // Return a response (optional)
-        return redirect()->back()->with('success', 'Record added successfully!');
+        return redirect()->back()->with('success', 'Record and inventory transactions added successfully!');
     }
+
+
 
     /**
      * Remove the record from the table
@@ -160,7 +299,7 @@ class BookkeepingController extends Controller
     {
         $record = Record::where('id', $id)->first();
 
-        $request -> validate([
+        $request->validate([
             'recordStatus' => ['required', 'integer'],
         ]);
 
@@ -169,4 +308,5 @@ class BookkeepingController extends Controller
 
         return redirect()->route('display.record.owner')->with('destroy', 'A record has been removed successfully');
     }
+
 }

@@ -28,7 +28,7 @@ Auth::routes(['register' => false]);
 
 /*------------------------------------------
 --------------------------------------------
-All Admin Routes List
+All "Admin" Routes List
 --------------------------------------------
 --------------------------------------------*/
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
@@ -36,7 +36,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
         Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.home');
 
-        // Manage Account and Profile
+        // Manage Account and Company Profile
         Route::get('/user/list', [UserController::class, 'index'])->name('display.user');
         Route::get('/register', [UserController::class, 'create'])->name('create.register');
         Route::post('/register/user', [UserController::class, 'store'])->name('store.register');
@@ -57,14 +57,14 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
 /*------------------------------------------
 --------------------------------------------
-All Business Owner Routes List
+All "Business Owner" Routes List
 --------------------------------------------
 --------------------------------------------*/
 Route::middleware(['auth', 'user-access:owner'])->group(function () {
     Route::group(['prefix' => '/owner'], function () {
         Route::get('/dashboard', [HomeController::class, 'ownerHome'])->name('owner.home');
 
-        //Manage Account and Profile
+        //Manage Account and Company Profile
         Route::get('/user/profile', [UserController::class, 'displayProfileOwner'])->name('display.profile.owner');
         Route::get('/change/{id}/password', [UserController::class, 'editPasswordOwner'])->name('edit.password.owner');
         Route::post('/update/{id}/password', [UserController::class, 'updatePasswordOwner'])->name('update.password.owner');
@@ -88,7 +88,8 @@ Route::middleware(['auth', 'user-access:owner'])->group(function () {
         Route::post('/bookkeeping/record/opened',[BookkeepingController::class, 'storeOpeningRecord'])->name('store.open.record.owner');
         Route::post('/bookkeeping/record/closed',[BookkeepingController::class, 'storeClosingRecord'])->name('store.close.record.owner');
         Route::post('/bookkeeping/record/store', [BookkeepingController::class, 'storeRecord'])->name('store.record.owner');
-        Route::get('/bookkeeping/{id}/record/remove', [BookkeepingController::class, 'removeRecord'])->name('remove.record.owner');
+        // Route::get('/bookkeeping/{id}/record/remove', [BookkeepingController::class, 'removeRecord'])->name('remove.record.owner');
+        // Route::post('/bookkeeping/{id}/record/update',[BookkeepingController::class, 'updateRecord'])->name('update.record.owner');
 
     });
 });
@@ -97,7 +98,7 @@ Route::middleware(['auth', 'user-access:owner'])->group(function () {
 
 /*------------------------------------------
 --------------------------------------------
-All Staff Routes List
+All "Staff" Routes List
 --------------------------------------------
 --------------------------------------------*/
 Route::middleware(['auth', 'user-access:staff'])->group(function () {

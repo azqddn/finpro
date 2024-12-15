@@ -16,10 +16,10 @@
                     </div>
                 @endif
 
-                <h3 class="my-4">Product Edit History</h3>
+                <h3 class="mb-4" style="color: rgb(0, 0, 216)">Product Edit History</h3>
                 {{-- Main --}}
                 <div class="row justify-content-center px-5 mb-5"
-                    style="width: 100%; height:auto; background-color:rgb(255, 255, 255); box-shadow: 2px 3px 6px #0213ff42; border-radius:10px; padding-top:15px; padding-bottom:15px">
+                    style="width: 100%; height:auto; background-color:rgb(255, 255, 255); box-shadow: 2px 3px 6px #4b4b4b42; border-radius:10px; padding-top:15px; padding-bottom:15px">
                     {{-- List --}}
                     @foreach ($editedProducts->sortByDesc(function ($groupedByDate) {
             return \Carbon\Carbon::parse($groupedByDate->first()->created_at)->format('Y-m-d');
@@ -34,13 +34,13 @@
                 return \Carbon\Carbon::parse($groupedEdits->first()->created_at)->format('H:i');
             }) as $time => $groupedEdits)
                             <div class="mb-4"
-                                style="border: 1px solid rgb(161, 161, 161); padding: 10px; border-radius: 10px;">
+                                style="border: 1px solid rgb(161, 161, 161); padding: 10px; border-radius: 10px;box-shadow: 2px 3px 6px #0044ff42;">
 
                                 {{-- Flexbox container for time and delete button --}}
                                 <div class="d-flex justify-content-between align-items-center">
                                     {{-- Time --}}
-                                    <h6 style="color: rgb(83, 83, 83)"><strong>Time: {{ $time }}</strong></h6>
-
+                                    <h6 style="color: rgb(83, 83, 83)"><strong>Time: {{\Carbon\Carbon::parse($time)->format('h:i A')}}</strong></h6>
+                                    
                                     {{-- Delete Button --}}
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal"
                                         onclick="populateModal({{ $groupedEdits->first()->id }})">

@@ -32,7 +32,7 @@ class Record extends Model
 
     public function InventoryTransaction()
     {
-        return $this->hasMany(InventoryTransaction::class, 'transId');
+        return $this->belongsTo(InventoryTransaction::class, 'transId');
     }
 
 }
