@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\BookkeepingController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\ReportController;
 use App\Models\User;
 use Faker\Guesser\Name;
 
@@ -90,7 +91,8 @@ Route::middleware(['auth', 'user-access:owner'])->group(function () {
         Route::post('/bookkeeping/record/store', [BookkeepingController::class, 'storeRecord'])->name('store.record.owner');
         // Route::get('/bookkeeping/{id}/record/remove', [BookkeepingController::class, 'removeRecord'])->name('remove.record.owner');
         // Route::post('/bookkeeping/{id}/record/update',[BookkeepingController::class, 'updateRecord'])->name('update.record.owner');
-
+        Route::get('/report/list', [ReportController::class, 'displayReport'])->name('owner.report.list');
+        Route::get('/report/create', [ReportController::class, 'createReport'])->name('owner.report.create');
     });
 });
 

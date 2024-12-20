@@ -101,7 +101,7 @@
                             {{-- Low Quantity Alert --}}
                             <div class="row my-3">
                                 <label for=""
-                                    class="col-md-4 col-form-label text-md-end">{{ __('Low Stock Alert :') }}</label>
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Reorder Point :') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="stockAlert" type="text"
@@ -137,7 +137,7 @@
                             {{-- Expired Date Alert --}}
                             <div class="row my-3">
                                 <label for=""
-                                    class="col-md-4 col-form-label text-md-end">{{ __('Expired Date Alert :') }}</label>
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Expiration Alert :') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="expiredAlert" type="date"

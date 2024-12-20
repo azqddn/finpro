@@ -127,12 +127,19 @@
 
                         {{-- Menu --}}
                         <div class="dropdown" style="margin-left: auto;">
-                            <div style="cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{-- <div style="cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18"
                                     height="18" fill="currentColor">
                                     <path d="M3 4H21V6H3V4ZM3 11H21V13H3V11ZM3 18H21V20H3V18Z"></path>
                                 </svg>
-                            </div>
+                            </div> --}}
+                            <a class="btn dropdown-toggle pb-1" href="#" role="button" id="dropdownMenuLink"
+                                data-bs-toggle="dropdown" aria-expanded="false" style="width: 60px; height:35px">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20"
+                                    height="auto" fill="currentColor">
+                                    <path d="M3 4H21V6H3V4ZM3 11H21V13H3V11ZM3 18H21V20H3V18Z"></path>
+                                </svg>
+                            </a>
 
                             <!-- Dropdown Menu -->
                             <ul class="dropdown-menu dropdown-menu-dark">
