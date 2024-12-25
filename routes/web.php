@@ -72,8 +72,8 @@ Route::middleware(['auth', 'user-access:owner'])->group(function () {
         Route::get('/company/profile', [UserController::class, 'displayCompanyOwner'])->name('display.company.owner');
 
         //Manage Inventory
-        Route::get('/product/list',[InventoryController::class, 'displayProduct'])->name('display.product.owner');
-        Route::get('/add/product',[InventoryController::class, 'createProduct'])->name('add.product.owner');
+        Route::get('/product/list', [InventoryController::class, 'displayProduct'])->name('display.product.owner');
+        Route::get('/add/product', [InventoryController::class, 'createProduct'])->name('add.product.owner');
         Route::post('/store/product', [InventoryController::class, 'storeProduct'])->name('store.product.owner');
         Route::post('/remove/{id}/product', [InventoryCOntroller::class, 'removeProduct'])->name('remove.product.owner');
         Route::get('/product/history', [InventoryController::class, 'displayProductHistory'])->name('display.product.history.owner');
@@ -86,13 +86,18 @@ Route::middleware(['auth', 'user-access:owner'])->group(function () {
 
         //Manage Bookkeeping
         Route::get('/bookkeeping/record', [BookkeepingController::class, 'displayRecord'])->name('display.record.owner');
-        Route::post('/bookkeeping/record/opened',[BookkeepingController::class, 'storeOpeningRecord'])->name('store.open.record.owner');
-        Route::post('/bookkeeping/record/closed',[BookkeepingController::class, 'storeClosingRecord'])->name('store.close.record.owner');
+        Route::post('/bookkeeping/record/opened', [BookkeepingController::class, 'storeOpeningRecord'])->name('store.open.record.owner');
+        Route::post('/bookkeeping/record/closed', [BookkeepingController::class, 'storeClosingRecord'])->name('store.close.record.owner');
         Route::post('/bookkeeping/record/store', [BookkeepingController::class, 'storeRecord'])->name('store.record.owner');
         // Route::get('/bookkeeping/{id}/record/remove', [BookkeepingController::class, 'removeRecord'])->name('remove.record.owner');
         // Route::post('/bookkeeping/{id}/record/update',[BookkeepingController::class, 'updateRecord'])->name('update.record.owner');
-        Route::get('/report/list', [ReportController::class, 'displayReport'])->name('owner.report.list');
-        Route::get('/report/create', [ReportController::class, 'createReport'])->name('owner.report.create');
+        // Route::get('/report/list', [ReportController::class, 'displayReport'])->name('owner.report.list');
+
+        //Manage Report
+        Route::get('/report/create', [ReportController::class, 'createReport'])->name('report.create');
+        Route::post('/report/generate', [ReportController::class, 'generate'])->name('report.generate');
+        Route::get('/report/download/{fileName}', [ReportController::class, 'download'])->name('report.download');
+        
     });
 });
 
@@ -110,8 +115,7 @@ Route::middleware(['auth', 'user-access:staff'])->group(function () {
         //Manage Account and Profile
         Route::get('/user/profile', [UserController::class, 'displayProfileStaff'])->name('display.profile.staff');
         Route::get('/change/{id}/password', [UserController::class, 'editPasswordStaff'])->name('edit.password.staff');
-        Route::post('/update/{id}/password',[UserController::class, 'updatePasswordStaff'])->name('update.password.staff');
+        Route::post('/update/{id}/password', [UserController::class, 'updatePasswordStaff'])->name('update.password.staff');
         Route::get('/company/profile', [UserController::class, 'displayCompanyStaff'])->name('display.company.staff');
     });
-});
-;
+});;

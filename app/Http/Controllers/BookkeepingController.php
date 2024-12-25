@@ -121,85 +121,6 @@ class BookkeepingController extends Controller
     /**
      * Store Record
      */
-    // public function storeRecord(Request $request)
-    // {
-    //     // Validate the incoming request data
-    //     $request->validate([
-    //         'recordType' => 'required|string',
-    //         'recordDesc' => 'required|string',
-    //         'recordRevenue' => 'nullable|numeric',
-    //         'recordExpenses' => 'nullable|numeric',
-    //         'recordNotes' => 'nullable|string',
-    //         'recordProof' => 'nullable|mimes:pdf,jpeg,jpg,png|max:2048', // Limit file size to 2MB
-    //         'transId' => 'nullable|array', // Ensure transId is an array for transactions
-    //         'quantity' => 'nullable|array', // Ensure quantity is an array
-    //     ]);
-
-    //     // Retrieve the latest recordBalance from the most recent record
-    //     $latestRecord = Record::orderBy('id', 'desc')->first();
-    //     $latestBalance = $latestRecord ? $latestRecord->recordBalance : 0; // Default to 0 if no records exist
-
-    //     // Create a new Record instance
-    //     $record = new Record();
-    //     $record->userId = Auth::user()->id;
-    //     $record->recordDesc = $request->recordDesc;
-    //     $record->recordNotes = $request->recordNotes;
-    //     $record->recordStatus = 2; // Opened status
-
-    //     // Handle different record types: Revenue or Expenses
-    //     if ($request->recordType === 'revenue') {
-    //         $record->recordRevenue = $request->recordRevenue;
-    //         $record->recordExpenses = null;  // Ensure expenses is null for revenue
-    //         $record->recordBalance = $latestBalance + $request->recordRevenue; // Add revenue to balance
-    //     } elseif ($request->recordType === 'expenses') {
-    //         $record->recordRevenue = null;  // Ensure revenue is null for expenses
-    //         $record->recordExpenses = $request->recordExpenses;
-    //         $record->recordBalance = $latestBalance - $request->recordExpenses; // Subtract expenses from balance
-    //     }
-
-    //     // Handle file upload for record proof
-    //     $filePath = public_path('bookkeeping');
-    //     if ($request->hasFile('recordProof')) {
-    //         $file = $request->file('recordProof');
-    //         $file_name = time() . $file->getClientOriginalName();
-    //         $file->move($filePath, $file_name);
-    //         $record->recordProof = $file_name;
-    //     }
-
-    //     // Save the record to the database
-    //     $record->save();
-
-    //     // Handle Inventory Transactions
-    //     if ($request->has('transId') && $request->has('quantity')) {
-    //         foreach ($request->transId as $key => $productName) {
-    //             // Validate quantity
-    //             $quantity = $request->quantity[$key];
-    //             if (!$quantity || $quantity <= 0) {
-    //                 continue; // Skip invalid or empty quantities
-    //             }
-
-    //             // Find the product by its name
-    //             $product = Product::where('productName', $productName)->first();
-    //             if ($product) {
-    //                 // Deduct the quantity from the product's current stock
-    //                 $product->productQuantity -= $quantity;
-    //                 $product->save();
-
-    //                 // Create a new inventory transaction
-    //                 $transaction = new InventoryTransaction();
-    //                 $transaction->transProduct = "$productName: $quantity";
-    //                 $transaction->save();
-
-    //                 // Associate the transaction with the record
-    //                 $record->transId = $transaction->id;
-    //                 $record->save();
-    //             }
-    //         }
-    //     }
-
-    //     // Return a response (optional)
-    //     return redirect()->back()->with('success', 'Record and inventory transactions added successfully!');
-    // }
     public function storeRecord(Request $request)
     {
         // Validate the incoming request data
@@ -264,6 +185,7 @@ class BookkeepingController extends Controller
                 if ($product) {
                     // Deduct the quantity from the product's current stock
                     $product->productQuantity -= $quantity;
+                    $product->transactions += $quantity;
                     $product->save();
 
                     // Add the product details to the array

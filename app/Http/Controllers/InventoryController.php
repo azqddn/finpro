@@ -88,8 +88,8 @@ class InventoryController extends Controller
         $product->productExpired = $request->productExpired;
         $product->expiredAlert = $request->expiredAlert;
         $product->categoryId = $request->categoryId;
+        $product->transactions = 0;
         $product->userId = Auth::user()->id;
-        // $product->userId = auth()->user()->id;
 
         //Proof
         $filePath = public_path('product');
