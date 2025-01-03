@@ -23,7 +23,7 @@
                     style="width: 100%; height:auto; background-color:white; border-radius:10px; box-shadow: 2px 3px 6px #4b4b4b42;">
                     <h5 class="mb-5" style="color: rgb(78, 78, 78)">Choose Your Report</h5>
                     <!-- Report Selection -->
-                    <form id="reportForm" method="POST" action="{{ route('report.generate') }}">
+                    <form id="reportForm" method="POST" action="{{ route('owner.report.generate') }}">
                         @csrf
                         <div class="form-group mb-3">
                             <label for="reportType">Report Type:</label>
@@ -62,6 +62,7 @@
                         <button id="downloadReport" class="btn btn-success">Download Report</button>
                     </div>
                 </div>
+                <a href="{{route('template')}}"><button>template</button></a>
             </div>
         </div>
     </div>

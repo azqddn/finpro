@@ -153,7 +153,6 @@
 
                     {{-- Table --}}
                     <table id="product-list-table" class="table table-bordered mt-3">
-                        {{-- style="width:97%; overflow: hidden; border: 1px solid #dee2e6; border-radius:7px" --}}
                         <thead style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6">
 
                             <tr>
