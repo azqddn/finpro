@@ -62,7 +62,6 @@
                         <button id="downloadReport" class="btn btn-success">Download Report</button>
                     </div>
                 </div>
-                <a href="{{route('template')}}"><button>template</button></a>
             </div>
         </div>
     </div>

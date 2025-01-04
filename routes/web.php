@@ -96,11 +96,7 @@ Route::middleware(['auth', 'user-access:owner'])->group(function () {
         //Manage Report
         Route::get('/report/create', [ReportController::class, 'createReport'])->name('owner.report.create');
         Route::post('/report/generate', [ReportController::class, 'generate'])->name('owner.report.generate');
-        Route::get('/report/download/{fileName}', [ReportController::class, 'download'])->name('report.download');
-        Route::get('/template', function(){
-            return view('ManageReportView.owner.template');
-        })->name('template');
-        
+        Route::get('/report/download/{fileName}', [ReportController::class, 'download'])->name('report.download');   
         
     });
 });

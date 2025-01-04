@@ -19,7 +19,7 @@
                 </h3>
 
                 {{-- Main 1 --}}
-                <div class="row justify-content-center"
+                <div class="row justify-content-center mb-5"
                     style="width: 100%; height:auto; background-color:white; border-radius:10px; box-shadow: 2px 3px 6px #4b4b4b42;">
                     {{-- top --}}
                     <div class="d-flex justify-content-between align-items-center pt-4">
@@ -31,7 +31,7 @@
                                 <form action="{{ route('display.record.owner') }}" method="GET"
                                     class="d-flex justify-content-between align-items-center"
                                     style="width:100%; border-radius:10px">
-                                    <input type="text" placeholder="Search" name="search" value=""
+                                    <input type="text" placeholder="Search by Description" name="search" value=""
                                         style="border: none; outline: none; color:rgb(61, 61, 61); width:100%" />
                                     <button type="submit"
                                         style="border: none; outline: none; background-color:transparent">
@@ -59,10 +59,24 @@
 
                             <!-- Dropdown Menu -->
                             <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="dropdown-item active" href="?sort=oldest">Oldest First</a></li>
-                                <li><a class="dropdown-item" href="#">Revenue</a></li>
-                                <li><a class="dropdown-item" href="#">Expenses</a></li>
-                                <li><a class="dropdown-item" href="#">Balance</a></li>
+                                <li><a class="dropdown-item"
+                                        href="{{ route('display.record.owner', ['sort' => 'revenue_low_high']) }}">Revenue
+                                        Low to High</a></li>
+                                <li><a class="dropdown-item"
+                                        href="{{ route('display.record.owner', ['sort' => 'revenue_high_low']) }}">Revenue
+                                        High to Low</a></li>
+                                <li><a class="dropdown-item"
+                                        href="{{ route('display.record.owner', ['sort' => 'expense_low_high']) }}">Expense
+                                        Low to High</a></li>
+                                <li><a class="dropdown-item"
+                                        href="{{ route('display.record.owner', ['sort' => 'expense_high_low']) }}">Expense
+                                        High to Low</a></li>
+                                <li><a class="dropdown-item"
+                                        href="{{ route('display.record.owner', ['sort' => 'balance_low_high']) }}">Balance
+                                        Low to High</a></li>
+                                <li><a class="dropdown-item"
+                                        href="{{ route('display.record.owner', ['sort' => 'balance_high_low']) }}">Balance
+                                        High to Low</a></li>
                             </ul>
                         </div>
 
@@ -242,14 +256,9 @@
 
                             </tbody>
                         </table>
-                        <div id="paginate" class="d-flex justify-content-center">{{ $record->links() }}</div>
+                        <div id="paginate" class="d-flex justify-content-center">{{ $record->appends(request()->query())->links() }}
+                        </div>
                     </div>
-                </div>
-
-                {{-- Main 2 --}}
-                <div class="row justify-content-center my-4"
-                    style="width: 100%; height:auto; background-color:white; border-radius:10px;box-shadow: 2px 3px 6px #4b4b4b42;">
-                    aa
                 </div>
             </div>
         </div>

@@ -18,23 +18,35 @@ class CreateUsersSeeder extends Seeder
         $company = Company::where('companyName', 'Pasar Mini Afkar Sdn Bhd')->first();
 
         $users = [
+            // [
+            //    'name' => 'Admin User',
+            //    'email' => 'admin@itsolutionstuff.com',
+            //    'type' => 0,
+            //    'password' => bcrypt('12345678'),
+            //    'address' => '123 Admin St, Admin City, AC 12345',
+            //    'phone' => '0123456789',
+            //    'ic' => 'A12345678',
+            //    'staffId' => 'ADM001',
+            //    'photo' => 'admin-photo.jpg',
+            //    'companyId' => $company->id, // Assign the company ID
+            // ],
             [
-               'name' => 'Admin User',
-               'email' => 'admin@itsolutionstuff.com',
-               'type' => 0,
-               'password' => bcrypt('12345678'),
-               'address' => '123 Admin St, Admin City, AC 12345',
-               'phone' => '0123456789',
-               'ic' => 'A12345678',
-               'staffId' => 'ADM001',
-               'photo' => 'admin-photo.jpg',
-               'companyId' => $company->id, // Assign the company ID
-            ],
+                'name' => 'Muhammad Aziquddin',
+                'email' => 'aziquddin99@gmail.com',
+                'type' => 0,
+                'password' => bcrypt('12345678'),
+                'address' => 'No.7, Lorong 9, Taman Makmur Beruas Jaya, 70400, Pekan, Pahang',
+                'phone' => '0101038767',
+                'ic' => '021228010554',
+                'staffId' => 'AD181102',
+                'photo' => 'admin-photo.jpg',
+                'companyId' => $company->id, // Assign the company ID
+             ],
             // [
             //    'name' => 'Business Owner User',
             //    'email' => 'owner@itsolutionstuff.com',
             //    'type' => 1,
-            //    'password' => bcrypt('123456'),
+            //    'password' => bcrypt('12345678'),
             //    'address' => '456 Owner Blvd, Owner City, OC 23456',
             //    'phone' => '0987654321',
             //    'ic' => 'B23456789',
@@ -46,7 +58,7 @@ class CreateUsersSeeder extends Seeder
             //    'name' => 'Staff User',
             //    'email' => 'staff@itsolutionstuff.com',
             //    'type' => 2,
-            //    'password' => bcrypt('123456'),
+            //    'password' => bcrypt('12345678'),
             //    'address' => '789 Staff Rd, Staff Town, ST 34567',
             //    'phone' => '0123987654',
             //    'ic' => 'C34567890',

@@ -24,30 +24,49 @@ class InventoryController extends Controller
     public function displayProduct(Request $request)
     {
         $search = $request->input('search'); // Get search query from request for search
+        $sort = $request->input('sort');     // Get sort parameter from request
 
-
-        //Default product display
-        $productQuery = Product::with('category')->where('productStatus', '1')->orderBy('created_at', 'desc');
+        // Default product display
+        $productQuery = Product::with('category')->where('productStatus', '1');
 
         // Display searched product
         if ($search) {
             $productQuery->where('productName', 'LIKE', "%{$search}%");
         }
 
-        $products = $productQuery->paginate(5);
+        // Sorting logic
+        switch ($sort) {
+            case 'a_to_z':
+                $productQuery->orderBy('productName', 'asc');
+                break;
+            case 'price_low_high':
+                $productQuery->orderBy('productSell', 'asc');
+                break;
+            case 'price_high_low':
+                $productQuery->orderBy('productSell', 'desc');
+                break;
+            case 'cost_low_high':
+                $productQuery->orderBy('productCost', 'asc');
+                break;
+            case 'cost_high_low':
+                $productQuery->orderBy('productCost', 'desc');
+                break;
+            case 'low_stock':
+                $productQuery->whereColumn('productQuantity', '<=', 'stockAlert');
+                break;
+            case 'expired_soon':
+                $currentDate = now();
+                $productQuery->where('expiredAlert', '<=', $currentDate);
+                break;
+            default:
+                $productQuery->orderBy('created_at', 'desc');  // Default sorting if no sort is selected
+                break;
+        }
+
+        $products = $productQuery->paginate(12);
         $category = Category::all();
 
-        // For Alert Message
-        $currentDate = now();
-        $alertMessage = Product::with('category')
-        ->where('productStatus', '1') // Only active products
-        ->where(function ($query) use ($currentDate) {
-            $query->whereColumn('productQuantity', '<=', 'stockAlert') // Low stock alert
-                ->orWhere('expiredAlert', '<=', $currentDate); // Expired or nearing expiration
-        })
-        ->get();
-
-        return view('ManageInventoryView.owner.productList', ['products' => $products, 'category' => $category, 'alertMessage' => $alertMessage ]);
+        return view('ManageInventoryView.owner.productList', ['products' => $products, 'category' => $category, 'sort' => $sort]);
     }
 
 
@@ -285,18 +304,47 @@ class InventoryController extends Controller
      */
     public function displayProductHistory(Request $request)
     {
-        $productQuery = Product::with('category', 'user')->where('productStatus', '==', '0')->orderBy('updated_at', 'desc');
+        // Default product query with relationships
+        $productQuery = Product::with('category', 'user')->where('productStatus', 0);
 
-        // Handle Search Function
-        $search = $request->input('search');
-        if($search){
-            $productQuery = Product::with('category', 'user')->where('productName', 'like', "%$search%")->where('productStatus', '==', '0')->orderBy('updated_at', 'desc');
+        // Get sort parameter from request or default to 'create_date'
+        $sort = $request->input('sort', 'create_date'); // Default to 'create_date'
+
+        // Sorting logic
+        switch ($sort) {
+            case 'a_to_z':
+                $productQuery->orderBy('productName', 'asc');
+                break;
+            case 'price_low_high':
+                $productQuery->orderBy('productSell', 'asc');
+                break;
+            case 'price_high_low':
+                $productQuery->orderBy('productSell', 'desc');
+                break;
+            case 'cost_low_high':
+                $productQuery->orderBy('productCost', 'asc');
+                break;
+            case 'cost_high_low':
+                $productQuery->orderBy('productCost', 'desc');
+                break;
+            case 'create_date':
+            default:
+                $productQuery->orderBy('created_at', 'desc');  // Default sorting
+                break;
         }
 
-        $product = $productQuery->paginate(10);
+        // Handle search function
+        $search = $request->input('search');
+        if ($search) {
+            $productQuery->where('productName', 'like', "%$search%");
+        }
 
-        return view('ManageInventoryView.owner.productHistory', ['product' => $product]);
+        // Paginate the result
+        $product = $productQuery->paginate(5);
+
+        return view('ManageInventoryView.owner.productHistory', ['product' => $product, 'sort' => $sort]);
     }
+
 
     /**
      * Delete the product from the database
