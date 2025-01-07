@@ -18,69 +18,11 @@ class ReportController extends Controller
         return view('ManageReportView.owner.createReport');
     }
 
-    // Generate Report based on type and duration
-    // public function generate(Request $request)
-    // {
-    //     $validated = $request->validate([
-    //         'report_type' => 'required|in:financial,inventory',
-    //         'duration_type' => 'required|in:daily,monthly',
-    //         'date' => 'nullable|date',
-    //         'month' => 'nullable|integer|min:1|max:12',
-    //     ]);
-
-    //     $reportType = $validated['report_type'];
-    //     $durationType = $validated['duration_type'];
-    //     $date = $validated['date'] ?? null;
-    //     $month = $validated['month'] ?? null;
-
-    //     $data = [];
-    //     $reportTitle = '';
-
-    //     // Handle Financial Report
-    //     if ($reportType === 'financial') {
-    //         if ($durationType === 'daily' && $date) {
-    //             $data = Record::whereDate('created_at', $date)->get();
-    //             $reportTitle = "Daily Financial Report - $date";
-    //         } elseif ($durationType === 'monthly' && $month) {
-    //             $data = Record::whereMonth('created_at', $month)->get();
-    //             $reportTitle = "Monthly Financial Report - " . date('F', mktime(0, 0, 0, $month, 1));
-    //         }
-    //     }
-
-    //     // Handle Inventory Report
-    //     elseif ($reportType === 'inventory') {
-    //         if ($durationType === 'daily' && $date) {
-    //             $data = Product::whereDate('created_at', $date)->get();
-    //             $reportTitle = "Daily Inventory Report - $date";
-    //         } elseif ($durationType === 'monthly' && $month) {
-    //             $data = Product::whereMonth('created_at', $month)->get();
-    //             $reportTitle = "Monthly Inventory Report - " . date('F', mktime(0, 0, 0, $month, 1));
-    //         }
-    //     }
-
-    //     if ($data->isEmpty()) {
-    //         return back()->with('destroy', 'No data found for the selected criteria.');
-    //     }
-
-    //     $company = Company::first();
-    //     // Generate PDF
-    //     $pdf = PDF::loadView('ManageReportView.owner.reportTemplate', [
-    //         'data' => $data,
-    //         'reportTitle' => $reportTitle,
-    //         'company' => $company
-    //     ]);
-
-    //     $fileName = strtolower(str_replace(' ', '_', $reportTitle)) . '.pdf';
-    //     Storage::put('reports/' . $fileName, $pdf->output());
-
-    //     return redirect()->route('report.download', ['fileName' => $fileName])
-    //                      ->with('success', 'Report generated successfully!');
-    // }
     public function generate(Request $request)
     {
         $validated = $request->validate([
             'report_type' => 'required|in:financial,inventory',
-            'duration_type' => 'required|in:daily,monthly',
+            'duration_type' => 'required|in:daily,weekly,monthly',
             'date' => 'nullable|date',
             'month' => 'nullable|integer|min:1|max:12',
         ]);
@@ -139,34 +81,40 @@ class ReportController extends Controller
 
         // Handle Inventory Report
         elseif ($reportType === 'inventory') {
-            if ($durationType === 'daily' && $date) {
-
-                $data = Product::whereDate('created_at', $date)->where('productStatus', 1)->get();
-                $reportTitle = "Daily Inventory Report - $date";
-
+            if ($durationType === 'weekly' && $date) {
+                $startOfWeek = \Carbon\Carbon::parse($date)->startOfWeek();
+                $endOfWeek = \Carbon\Carbon::parse($date)->endOfWeek();
+        
+                $data = Product::whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                    ->where('productStatus', 1)
+                    ->get();
+                $reportTitle = "Weekly Inventory Report - $startOfWeek to $endOfWeek";
+        
                 $lowStockProduct = Product::whereColumn('productQuantity', '<', 'stockAlert')
-                    ->whereDate('created_at', $date)
+                    ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
                     ->get();
-
+        
                 $outOfStockProduct = Product::where('productQuantity', 0)
-                    ->whereDate('created_at', $date)
+                    ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
                     ->get();
-
+        
                 $expiredProduct = Product::whereDate('productExpired', '<=', now())
-                    ->whereDate('created_at', $date)
+                    ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
                     ->get();
-
+        
                 $expiringSoonProduct = Product::whereDate('expiredAlert', '<=', now())
                     ->whereDate('productExpired', '>', now())
-                    ->whereDate('created_at', $date)
+                    ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
                     ->get();
-
-                $totalInventoryValue = Product::whereDate('created_at', $date)->where('productStatus', 1)
+        
+                $totalInventoryValue = Product::whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                    ->where('productStatus', 1)
                     ->get()
                     ->sum(fn($product) => $product->productQuantity * $product->productCost);
-
-                $totalProduct = Product::where('productStatus', 1)->whereDate('created_at', $date);
-
+        
+                $totalProduct = Product::where('productStatus', 1)
+                    ->whereBetween('created_at', [$startOfWeek, $endOfWeek]);
+        
                 // Calculate Summary
                 $summary['total_product'] = $totalProduct->count();
                 $summary['low_stock_product'] = $lowStockProduct->count();
@@ -223,7 +171,7 @@ class ReportController extends Controller
 
 
         if ($data->isEmpty()) {
-            return back()->with('destroy', 'No data found for the selected criteria.');
+            return back()->with('destroy', 'No data found for the selected criteria');
         }
 
         $company = Company::first();

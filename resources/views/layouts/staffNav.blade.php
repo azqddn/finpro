@@ -28,7 +28,7 @@
 <body class="" style="background-color: #e6e6e6ec">
     <div style="width: 15%; height:100vh; position:fixed;">
         <div id="sidebar" class="d-flex flex-column flex-shrink-0 p-3"
-            style="width:100%; height:100%; background-color:rgb(140, 0, 255); border-radius:5px">
+            style="width:100%; height:100%; background-color:rgb(19, 19, 19); border-radius:5px">
             <a class="ms-3" href="{{ route('owner.home') }}" style="width: 100%; height:50px">
                 <svg width="110" height="auto" viewBox="0 0 498 153" fill="none"
                     xmlns="http://www.w3.org/2000/svg">

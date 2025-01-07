@@ -4,9 +4,11 @@
     <div class="" style="width:85%; height:auto; margin-left:15%; float:left">
         <div class="d-flex justify-content-center" style="width: 100%; height:auto; position:relative">
             {{-- Content --}}
-            <div class="mt-4 row justify-content-center" style="width:70%; height:auto">
-                <h3>Change Password</h3>
-                <div class="card my-4">
+            <div class="mt-4 row justify-content-center" style="width:70%; height:auto; ">
+
+                <h3 style="color: rgb(0, 0, 216)">Change Password</h3>
+                
+                <div class="card my-4" style="box-shadow: 2px 3px 6px #4b4b4b42;">
                     <div class="card-body">
                         <div class="card-header">{{ __('Account') }}</div>
                         {{-- Account Form --}}

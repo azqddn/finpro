@@ -26,7 +26,7 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {   
+    {
         // Fetch financial records data
         $records = Record::selectRaw(
             'MONTH(created_at) as month, 
@@ -85,12 +85,11 @@ class HomeController extends Controller
             'productSales' => $productSales,
             'productQuantities' => $productQuantities,
             'totalAvailableProducts' => $totalAvailableProducts,
-            'totalRevenue' =>$totalRevenue,
-            'totalExpenses' =>$totalExpenses,
-            'user' =>$user,
-            'totalUsers' =>$totalUsers,
+            'totalRevenue' => $totalRevenue,
+            'totalExpenses' => $totalExpenses,
+            'user' => $user,
+            'totalUsers' => $totalUsers,
         ]);
-
     }
 
     /**
@@ -154,8 +153,8 @@ class HomeController extends Controller
             'productSales' => $productSales,
             'productQuantities' => $productQuantities,
             'totalAvailableProducts' => $totalAvailableProducts,
-            'totalRevenue' =>$totalRevenue,
-            'totalExpenses' =>$totalExpenses,
+            'totalRevenue' => $totalRevenue,
+            'totalExpenses' => $totalExpenses,
         ]);
     }
 
@@ -166,8 +165,8 @@ class HomeController extends Controller
      */
     public function staffHome(): View
     {
-         // Fetch financial records data
-         $records = Record::selectRaw(
+        // Fetch financial records data
+        $records = Record::selectRaw(
             'MONTH(created_at) as month, 
         SUM(recordRevenue) as totalRevenue, 
         SUM(recordExpenses) as totalExpenses, 
@@ -220,8 +219,8 @@ class HomeController extends Controller
             'productSales' => $productSales,
             'productQuantities' => $productQuantities,
             'totalAvailableProducts' => $totalAvailableProducts,
-            'totalRevenue' =>$totalRevenue,
-            'totalExpenses' =>$totalExpenses,
+            'totalRevenue' => $totalRevenue,
+            'totalExpenses' => $totalExpenses,
         ]);
     }
 }
