@@ -71,6 +71,11 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
         Route::post('/bookkeeping/record/closed', [BookkeepingController::class, 'storeClosingRecord'])->name('store.close.record.admin');
         Route::post('/bookkeeping/record/store', [BookkeepingController::class, 'storeRecord'])->name('store.record.admin');
 
+        //Manage Report
+        Route::get('/report/create', [ReportController::class, 'createReport'])->name('admin.report.create');
+        Route::post('/report/generate', [ReportController::class, 'generate'])->name('admin.report.generate');
+        Route::get('/report/download/{fileName}', [ReportController::class, 'download'])->name('admin.report.download');  
+
     });
 });
 
@@ -152,6 +157,11 @@ Route::middleware(['auth', 'user-access:staff'])->group(function () {
         Route::post('/bookkeeping/record/opened', [BookkeepingController::class, 'storeOpeningRecord'])->name('store.open.record.staff');
         Route::post('/bookkeeping/record/closed', [BookkeepingController::class, 'storeClosingRecord'])->name('store.close.record.staff');
         Route::post('/bookkeeping/record/store', [BookkeepingController::class, 'storeRecord'])->name('store.record.staff');
+
+        //Manage Report
+        Route::get('/report/create', [ReportController::class, 'createReport'])->name('staff.report.create');
+        Route::post('/report/generate', [ReportController::class, 'generate'])->name('staff.report.generate');
+        Route::get('/report/download/{fileName}', [ReportController::class, 'download'])->name('staff.report.download');  
 
     });
 });;

@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ReportController extends Controller
@@ -15,7 +16,16 @@ class ReportController extends Controller
     // Display the report creation view
     public function createReport()
     {
-        return view('ManageReportView.owner.createReport');
+        if (Auth::user()->type === 'admin') {
+            return view('ManageReportView.admin.createReport');
+        } elseif (Auth::user()->type === 'owner') {
+            return view('ManageReportView.owner.createReport');
+        }
+        elseif (Auth::user()->type === 'staff') {
+            return view('ManageReportView.staff.createReport');
+        }
+
+        // return view('ManageReportView.owner.createReport');
     }
 
     public function generate(Request $request)
@@ -177,19 +187,56 @@ class ReportController extends Controller
         $company = Company::first();
 
         // Generate PDF
-        $pdf = PDF::loadView('ManageReportView.owner.reportTemplate', [
-            'data' => $data,
-            'reportTitle' => $reportTitle,
-            'company' => $company,
-            'summary' => $summary,
-            'lowStockProduct' =>$lowStockProduct?? [],
-            'outOfStockProduct' =>$outOfStockProduct?? [],
-            'expiredProduct' =>$expiredProduct?? [],
-            'expiringSoonProduct' =>$expiringSoonProduct?? [],
-        ]);
+        if (Auth::user()->type === 'admin') {
+            $pdf = PDF::loadView('ManageReportView.admin.reportTemplate', [
+                'data' => $data,
+                'reportTitle' => $reportTitle,
+                'company' => $company,
+                'summary' => $summary,
+                'lowStockProduct' =>$lowStockProduct?? [],
+                'outOfStockProduct' =>$outOfStockProduct?? [],
+                'expiredProduct' =>$expiredProduct?? [],
+                'expiringSoonProduct' =>$expiringSoonProduct?? [],
+            ]);
+        } elseif (Auth::user()->type === 'owner') {
+            $pdf = PDF::loadView('ManageReportView.owner.reportTemplate', [
+                'data' => $data,
+                'reportTitle' => $reportTitle,
+                'company' => $company,
+                'summary' => $summary,
+                'lowStockProduct' =>$lowStockProduct?? [],
+                'outOfStockProduct' =>$outOfStockProduct?? [],
+                'expiredProduct' =>$expiredProduct?? [],
+                'expiringSoonProduct' =>$expiringSoonProduct?? [],
+            ]);
+        }
+        elseif (Auth::user()->type === 'staff') {
+            $pdf = PDF::loadView('ManageReportView.staff.reportTemplate', [
+                'data' => $data,
+                'reportTitle' => $reportTitle,
+                'company' => $company,
+                'summary' => $summary,
+                'lowStockProduct' =>$lowStockProduct?? [],
+                'outOfStockProduct' =>$outOfStockProduct?? [],
+                'expiredProduct' =>$expiredProduct?? [],
+                'expiringSoonProduct' =>$expiringSoonProduct?? [],
+            ]);
+        }
+
+        // $pdf = PDF::loadView('ManageReportView.owner.reportTemplate', [
+        //     'data' => $data,
+        //     'reportTitle' => $reportTitle,
+        //     'company' => $company,
+        //     'summary' => $summary,
+        //     'lowStockProduct' =>$lowStockProduct?? [],
+        //     'outOfStockProduct' =>$outOfStockProduct?? [],
+        //     'expiredProduct' =>$expiredProduct?? [],
+        //     'expiringSoonProduct' =>$expiringSoonProduct?? [],
+        // ]);
 
         $fileName = strtolower(str_replace(' ', '_', $reportTitle)) . '.pdf';
         Storage::put('reports/' . $fileName, $pdf->output());
+
 
         return redirect()->route('report.download', ['fileName' => $fileName])
             ->with('success', 'Report generated successfully!');
