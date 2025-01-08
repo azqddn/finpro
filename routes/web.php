@@ -65,6 +65,11 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
         Route::delete('/delete/{id}/edit/history', [InventoryController::class, 'destroyEditHistory'])->name('destroy.edit.history.admin');
         // Route::get('/product/alert', [InventoryController::class, 'displayProductAlert'])->name('display.product.alert.admin');
 
+        //Manage Bookkeeping
+        Route::get('/bookkeeping/record', [BookkeepingController::class, 'displayRecord'])->name('display.record.admin');
+        Route::post('/bookkeeping/record/opened', [BookkeepingController::class, 'storeOpeningRecord'])->name('store.open.record.admin');
+        Route::post('/bookkeeping/record/closed', [BookkeepingController::class, 'storeClosingRecord'])->name('store.close.record.admin');
+        Route::post('/bookkeeping/record/store', [BookkeepingController::class, 'storeRecord'])->name('store.record.admin');
 
     });
 });
@@ -129,5 +134,24 @@ Route::middleware(['auth', 'user-access:staff'])->group(function () {
         Route::get('/change/{id}/password', [UserController::class, 'editPasswordStaff'])->name('edit.password.staff');
         Route::post('/update/{id}/password', [UserController::class, 'updatePasswordStaff'])->name('update.password.staff');
         Route::get('/company/profile', [UserController::class, 'displayCompanyStaff'])->name('display.company.staff');
+
+        //Manage Inventory
+        Route::get('/product/list', [InventoryController::class, 'displayProduct'])->name('display.product.staff');
+        Route::get('/add/product', [InventoryController::class, 'createProduct'])->name('add.product.staff');
+        Route::post('/store/product', [InventoryController::class, 'storeProduct'])->name('store.product.staff');
+        Route::post('/remove/{id}/product', [InventoryCOntroller::class, 'removeProduct'])->name('remove.product.staff');
+        Route::get('/product/history', [InventoryController::class, 'displayProductHistory'])->name('display.product.history.staff');
+        Route::get('/destroy/{id}/product', [InventoryController::class, 'destroyProduct'])->name('destroy.product.staff');
+        Route::get('/edit/{id}/product', [InventoryController::class, 'editProduct'])->name('edit.product.staff');
+        Route::post('/update/{id}/product', [InventoryController::class, 'updateProduct'])->name('update.product.staff');
+        Route::get('/product/edit/history', [InventoryController::class, 'displayEditHistory'])->name('display.edit.history.staff');
+        Route::delete('/delete/{id}/edit/history', [InventoryController::class, 'destroyEditHistory'])->name('destroy.edit.history.staff');
+
+        //Manage Bookkeeping
+        Route::get('/bookkeeping/record', [BookkeepingController::class, 'displayRecord'])->name('display.record.staff');
+        Route::post('/bookkeeping/record/opened', [BookkeepingController::class, 'storeOpeningRecord'])->name('store.open.record.staff');
+        Route::post('/bookkeeping/record/closed', [BookkeepingController::class, 'storeClosingRecord'])->name('store.close.record.staff');
+        Route::post('/bookkeeping/record/store', [BookkeepingController::class, 'storeRecord'])->name('store.record.staff');
+
     });
 });;

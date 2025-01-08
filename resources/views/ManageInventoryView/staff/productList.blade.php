@@ -1,4 +1,4 @@
-@extends('layouts.adminNav')
+@extends('layouts.staffNav')
 
 @section('content')
     <div style="width: 85%; height:auto; margin-left:15%; float:left">
@@ -14,7 +14,7 @@
                         {{ session('destroy') }};
                     </div>
                 @endif
-                <h3 class="mb-4" style="color: black">
+                <h3 class="mb-4">
                     Inventory
                 </h3>
 
@@ -34,25 +34,25 @@
                             </div>
                             <ul class="dropdown-menu dropdown-menu-dark">
                                 <li><a class="dropdown-item"
-                                        href="{{ route('display.product.admin', ['sort' => 'a_to_z']) }}">From A to Z</a>
+                                        href="{{ route('display.product.staff', ['sort' => 'a_to_z']) }}">From A to Z</a>
                                 </li>
                                 <li><a class="dropdown-item"
-                                        href="{{ route('display.product.admin', ['sort' => 'price_low_high']) }}">Price Low
+                                        href="{{ route('display.product.staff', ['sort' => 'price_low_high']) }}">Price Low
                                         to High</a></li>
                                 <li><a class="dropdown-item"
-                                        href="{{ route('display.product.admin', ['sort' => 'price_high_low']) }}">Price High
+                                        href="{{ route('display.product.staff', ['sort' => 'price_high_low']) }}">Price High
                                         to Low</a></li>
                                 <li><a class="dropdown-item"
-                                        href="{{ route('display.product.admin', ['sort' => 'cost_low_high']) }}">Cost Low to
+                                        href="{{ route('display.product.staff', ['sort' => 'cost_low_high']) }}">Cost Low to
                                         High</a></li>
                                 <li><a class="dropdown-item"
-                                        href="{{ route('display.product.admin', ['sort' => 'cost_high_low']) }}">Cost High
+                                        href="{{ route('display.product.staff', ['sort' => 'cost_high_low']) }}">Cost High
                                         to Low</a></li>
                                 <li><a class="dropdown-item"
-                                        href="{{ route('display.product.admin', ['sort' => 'low_stock']) }}">Low/Out of
+                                        href="{{ route('display.product.staff', ['sort' => 'low_stock']) }}">Low/Out of
                                         Stock</a></li>
                                 <li><a class="dropdown-item"
-                                        href="{{ route('display.product.admin', ['sort' => 'expired_soon']) }}">Expired/Expiry
+                                        href="{{ route('display.product.staff', ['sort' => 'expired_soon']) }}">Expired/Expiry
                                         Soon</a></li>
                             </ul>
                         </div>
@@ -62,7 +62,7 @@
                             style="width: 100%; margin-right: auto; margin-left:28px">
                             <div class="d-flex align-items-center pt-3 ps-2 pe-2"
                                 style="border: 1px solid rgb(134, 134, 134); border-radius:10px; width:400px; height:35px; box-shadow: 1px 1px 10px #00000042;">
-                                <form action="{{ route('display.product.admin') }}" method="GET"
+                                <form action="{{ route('display.product.staff') }}" method="GET"
                                     class="d-flex justify-content-between align-items-center"
                                     style="width:100%; border-radius:10px">
                                     <input type="text" placeholder="Search by Product Name" name="search"
@@ -82,7 +82,7 @@
 
                         {{-- Add Product icon --}}
                         <div class="me-3">
-                            <a href="{{ route('add.product.admin') }}" style="text-decoration: none;">
+                            <a href="{{ route('add.product.staff') }}" style="text-decoration: none;">
                                 <button type="button" class="btn btn-light d-flex align-items-center"
                                     style="box-shadow: 2px 3px 6px #4b4b4b42; gap: 8px; width:150px">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16"
@@ -107,9 +107,9 @@
 
                             <!-- Dropdown Menu -->
                             <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="dropdown-item" href="{{ route('display.product.history.admin') }}">Product
+                                <li><a class="dropdown-item" href="{{ route('display.product.history.staff') }}">Product
                                         History</a></li>
-                                <li><a class="dropdown-item" href="{{ route('display.edit.history.admin') }}">Edit History</a>
+                                <li><a class="dropdown-item" href="{{ route('display.edit.history.staff') }}">Edit History</a>
                                 </li>
                             </ul>
                         </div>
@@ -216,16 +216,9 @@
                                                 {{-- Edit --}}
                                                 <li>
                                                     <a class="dropdown-item"
-                                                        href="{{ url('admin/edit/' . $product->id . '/product') }}">
+                                                        href="{{ url('staff/edit/' . $product->id . '/product') }}">
                                                         Edit
                                                     </a>
-                                                </li>
-                                                <hr style="margin: 4px 0;">
-                                                {{-- Remove --}}
-                                                <li>
-                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                        data-bs-target="#removeModal"
-                                                        onclick="populateModal({{ json_encode($product) }})">Remove</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -251,7 +244,7 @@
         //Remove product data
         document.getElementById('productModalName').textContent = product.productName;
         document.getElementById('productId').value = product.id;
-        const formAction = `/admin/remove/${product.id}/product`;
+        const formAction = `/owner/remove/${product.id}/product`;
         document.getElementById('removeForm').action = formAction;
 
         //Edit product data
@@ -269,33 +262,6 @@
 </script>
 
 
-{{-- Remove Product --}}
-<div class="modal fade" id="removeModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%)">
-
-        {{-- Content --}}
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" style="font-weight:bold" id="productModalLabel">Remove Product</h5>
-            </div>
-            <h5 class="mx-3">
-                The "<span id="productModalName"></span>" product will be removed from the product list.
-            </h5>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-
-                {{-- Form to remove the product --}}
-                <form method="POST" action="" id="removeForm">
-                    @csrf
-                    <input type="hidden" id="productId" name="productId">
-                    {{-- change the value of product status and pass to the controller --}}
-                    <input type="hidden" id="productStatus" name="productStatus" value="0">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 <style>
     #product-list-table th {

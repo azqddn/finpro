@@ -1,14 +1,14 @@
-@extends('layouts.adminNav')
+@extends('layouts.staffNav')
 
 @section('content')
     <div class="" style="width:85%; height:auto; margin-left:15%; float:left">
         <div class="d-flex justify-content-center" style="width: 100%; height:auto; position:relative">
             {{-- Content --}}
             <div class="mt-4 row justify-content-center" style="width:70%; height:auto">
-                <h3 class="my-4" style="color: black">Edit "{{ $product->productName }}" Information</h3>
+                <h3 class="my-4">Edit "{{ $product->productName }}" Information</h3>
                 {{-- Main --}}
                 <div style="width: 100%; height:auto; background-color:rgb(255, 255, 255); border-radius:10px; padding-top:15px">
-                    <form action="{{url('/admin/update/' .$product->id. '/product')}}" method="POST" enctype="multipart/form-data">
+                    <form action="{{url('/staff/update/' .$product->id. '/product')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         {{-- Product Name --}}
                         <div class="row my-3">

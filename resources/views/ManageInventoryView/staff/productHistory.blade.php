@@ -1,4 +1,4 @@
-@extends('layouts.adminNav')
+@extends('layouts.staffNav')
 
 @section('content')
     <div class="" style="width:85%; height:auto; margin-left:15%; float:left">
@@ -7,14 +7,14 @@
             <div class="mt-4 row justify-content-center" style="width:95%; height:auto">
                 @if (session('success'))
                     <div class="alert alert-success">
-                        {{ session('success') }}
+                        {{ session('success') }};
                     </div>
                 @elseif (session('destroy'))
                     <div class="alert alert-danger">
-                        {{ session('destroy') }}
+                        {{ session('destroy') }};
                     </div>
                 @endif
-                <h3 class="mb-4" style="color: black">Product History</h3>
+                <h3 class="mb-4">Product History</h3>
                 {{-- Main --}}
                 <div class="row justify-content-center mb-5"
                     style="width: 100%; height:auto; background-color:rgb(255, 255, 255); border-radius:10px; box-shadow: 2px 3px 6px #4b4b4b42;">
@@ -25,7 +25,7 @@
                         <div class="row justify-content-center my-4" style="flex-grow: 1;">
                             <div class="d-flex align-items-center pt-3 ps-2 pe-2"
                                 style="border: 1px solid rgb(134, 134, 134); border-radius:10px; width:400px; height:35px; box-shadow: 1px 1px 10px #00000042;">
-                                <form action="{{ route('display.product.history.admin') }}" method="GET"
+                                <form action="{{ route('display.product.history.staff') }}" method="GET"
                                     class="d-flex justify-content-between align-items-center"
                                     style="width:100%; border-radius:10px">
                                     <input type="text" placeholder="Search by Product Name" name="search" value=""
@@ -52,11 +52,11 @@
                                 </svg>
                             </div>
                             <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="dropdown-item" href="{{ route('display.product.history.admin', ['sort' => 'a_to_z']) }}">From A to Z</a></li>
-                                <li><a class="dropdown-item" href="{{ route('display.product.history.admin', ['sort' => 'price_low_high']) }}">Price Low to High</a></li>
-                                <li><a class="dropdown-item" href="{{ route('display.product.history.admin', ['sort' => 'price_high_low']) }}">Price High to Low</a></li>
-                                <li><a class="dropdown-item" href="{{ route('display.product.history.admin', ['sort' => 'cost_low_high']) }}">Cost Low to High</a></li>
-                                <li><a class="dropdown-item" href="{{ route('display.product.history.admin', ['sort' => 'cost_high_low']) }}">Cost High to Low</a></li>
+                                <li><a class="dropdown-item" href="{{ route('display.product.history.staff', ['sort' => 'a_to_z']) }}">From A to Z</a></li>
+                                <li><a class="dropdown-item" href="{{ route('display.product.history.staff', ['sort' => 'price_low_high']) }}">Price Low to High</a></li>
+                                <li><a class="dropdown-item" href="{{ route('display.product.history.staff', ['sort' => 'price_high_low']) }}">Price High to Low</a></li>
+                                <li><a class="dropdown-item" href="{{ route('display.product.history.staff', ['sort' => 'cost_low_high']) }}">Cost Low to High</a></li>
+                                <li><a class="dropdown-item" href="{{ route('display.product.history.staff', ['sort' => 'cost_high_low']) }}">Cost High to Low</a></li>
                             </ul>
                         </div>
                     </div>
@@ -74,7 +74,7 @@
                                 <th scope="col">Created By</th>
                                 <th scope="col">Create Date</th>
                                 <th scope="col">Remove Date</th>
-                                <th scope="col" style="width: 30px"></th>
+                                {{-- <th scope="col" style="width: 30px"></th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -126,9 +126,9 @@
                                             -
                                         @endif
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         @if ($item->productStatus == '0')
-                                            <a href="{{ url('admin/destroy/' . $item->id . '/product') }}">
+                                            <a href="{{ url('owner/destroy/' . $item->id . '/product') }}">
                                                 <svg style="color: rgba(0, 0, 0, 0.692)" xmlns="http://www.w3.org/2000/svg"
                                                     viewBox="0 0 24 24" width="21" height="21" fill="currentColor">
                                                     <path
@@ -137,7 +137,7 @@
                                                 </svg>
                                             </a>
                                         @endif
-                                    </td>
+                                    </td> --}}
                                 </tr>
                             @endforeach
                         </tbody>

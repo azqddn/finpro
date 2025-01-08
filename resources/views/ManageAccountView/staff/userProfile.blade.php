@@ -16,7 +16,7 @@
                 @endif
                 <h3>User Profile</h3>
                 <div class="mt-3 mb-4 row justify-content-center"
-                    style="background-color:rgb(255, 255, 255);border:1px solid rgb(185, 185, 185); box-shadow: 7px 7px 5px rgb(206, 222, 255); border-radius:10px; width:100%; height:auto">
+                    style="background-color:rgb(255, 255, 255);border:1px solid rgb(185, 185, 185);box-shadow: 2px 3px 6px #4b4b4b42; border-radius:10px; width:100%; height:auto">
                     {{-- Photo --}}
                     <div id="photo" class="rounded-circle my-3 row justify-content-center"
                         style="width: 140px; height: 140px;border:1px solid rgb(78, 78, 78); background-size: cover; background-position: center; 

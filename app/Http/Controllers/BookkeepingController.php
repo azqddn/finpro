@@ -21,58 +21,67 @@ class BookkeepingController extends Controller
      * Display All Bookkeeping Record
      */
     public function displayRecord(Request $request)
-{
-    // $product = Product::all();
-    $product = Product::where('productStatus', '=', '1')->get(); //only active product only (exclude removed product where the productStatus = 0)
+    {
+        // $product = Product::all();
+        $product = Product::where('productStatus', '=', '1')->get(); //only active product only (exclude removed product where the productStatus = 0)
 
-    // Only select the record with status 1/2 (closed/opened) only. (exclude 0 = removed record)
-    $recordQuery = Record::where('recordStatus', '!=', '0')->with('inventoryTransaction');
+        // Only select the record with status 1/2 (closed/opened) only. (exclude 0 = removed record)
+        $recordQuery = Record::where('recordStatus', '!=', '0')->with('inventoryTransaction');
 
-    // Handle Searching function
-    $search = $request->input('search');
-    if ($search) {
-        $recordQuery = $recordQuery->where('recordDesc', 'like', "%$search%");
+        // Handle Searching function
+        $search = $request->input('search');
+        if ($search) {
+            $recordQuery = $recordQuery->where('recordDesc', 'like', "%$search%");
+        }
+
+        // Handle Sorting
+        $sort = $request->input('sort');
+
+        switch ($sort) {
+            case 'revenue_low_high':
+                $recordQuery->orderBy('recordRevenue', 'asc');
+                break;
+            case 'revenue_high_low':
+                $recordQuery->orderBy('recordRevenue', 'desc');
+                break;
+            case 'expense_low_high':
+                $recordQuery->orderBy('recordExpenses', 'asc');
+                break;
+            case 'expense_high_low':
+                $recordQuery->orderBy('recordExpenses', 'desc');
+                break;
+            case 'balance_low_high':
+                $recordQuery->orderBy('recordBalance', 'asc');
+                break;
+            case 'balance_high_low':
+                $recordQuery->orderBy('recordBalance', 'desc');
+                break;
+            case 'oldest':
+                $recordQuery->orderBy('created_at', 'asc');
+                break;
+            case 'newest':
+            default:
+                $recordQuery->orderBy('created_at', 'desc');  // Default sorting by created_at (newest first)
+                break;
+        }
+
+        // Get the latest record for the current user
+        $latestRecord = Record::latest()->first();
+
+        // Paginate the result
+        $record = $recordQuery->paginate(20);
+
+        if (Auth::user()->type === 'admin') {
+            return view('ManageBookkeepingView.admin.recordList', ['product' => $product, 'latestRecord' => $latestRecord, 'record' => $record]);
+        } elseif (Auth::user()->type === 'owner') {
+            return view('ManageBookkeepingView.owner.recordList', ['product' => $product, 'latestRecord' => $latestRecord, 'record' => $record]);
+        }
+        elseif (Auth::user()->type === 'staff') {
+            return view('ManageBookkeepingView.staff.recordList', ['product' => $product, 'latestRecord' => $latestRecord, 'record' => $record]);
+        }
+
+        // return view('ManageBookkeepingView.owner.recordList', ['product' => $product, 'latestRecord' => $latestRecord, 'record' => $record]);
     }
-
-    // Handle Sorting
-    $sort = $request->input('sort');
-    
-    switch ($sort) {
-        case 'revenue_low_high':
-            $recordQuery->orderBy('recordRevenue', 'asc');
-            break;
-        case 'revenue_high_low':
-            $recordQuery->orderBy('recordRevenue', 'desc');
-            break;
-        case 'expense_low_high':
-            $recordQuery->orderBy('recordExpenses', 'asc');
-            break;
-        case 'expense_high_low':
-            $recordQuery->orderBy('recordExpenses', 'desc');
-            break;
-        case 'balance_low_high':
-            $recordQuery->orderBy('recordBalance', 'asc');
-            break;
-        case 'balance_high_low':
-            $recordQuery->orderBy('recordBalance', 'desc');
-            break;
-        case 'oldest':
-            $recordQuery->orderBy('created_at', 'asc');
-            break;
-        case 'newest':
-        default:
-            $recordQuery->orderBy('created_at', 'desc');  // Default sorting by created_at (newest first)
-            break;
-    }
-
-    // Get the latest record for the current user
-    $latestRecord = Record::where('userId', Auth::user()->id)->latest()->first();
-
-    // Paginate the result
-    $record = $recordQuery->paginate(20);
-
-    return view('ManageBookkeepingView.owner.recordList', ['product' => $product, 'latestRecord' => $latestRecord, 'record' => $record]);
-}
 
 
     /**
@@ -86,7 +95,7 @@ class BookkeepingController extends Controller
         ]);
 
         // Get the latest balance (or initialize to 0 if no previous records exist)
-        $latestRecord = Record::where('userId', Auth::user()->id)->latest()->first();
+        $latestRecord = Record::latest()->first();
         $currentBalance = $latestRecord ? $latestRecord->recordBalance : 0;
 
         // Create a new "Opening" record
@@ -118,7 +127,7 @@ class BookkeepingController extends Controller
         ]);
 
         // Get the latest balance from the most recent record
-        $latestRecord = Record::where('userId', Auth::user()->id)->latest()->first();
+        $latestRecord = Record::latest()->first();
         if (!$latestRecord) {
             return response()->json([
                 'success' => false,

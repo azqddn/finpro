@@ -1,4 +1,4 @@
-@extends('layouts.adminNav')
+@extends('layouts.staffNav')
 
 @section('content')
     <div class="" style="width:85%; height:auto; margin-left:15%; float:left">
@@ -16,7 +16,7 @@
                     </div>
                 @endif
 
-                <h3 class="mb-4" style="color: black">Product Edit History</h3>
+                <h3 class="mb-4">Product Edit History</h3>
                 {{-- Main --}}
                 <div class="row justify-content-center px-5 mb-5"
                     style="width: 100%; height:auto; background-color:rgb(255, 255, 255); box-shadow: 2px 3px 6px #4b4b4b42; border-radius:10px; padding-top:15px; padding-bottom:15px">
@@ -42,7 +42,7 @@
                                     <h6 style="color: rgb(83, 83, 83)"><strong>Time: {{\Carbon\Carbon::parse($time)->format('h:i A')}}</strong></h6>
                                     
                                     {{-- Delete Button --}}
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                    {{-- <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal"
                                         onclick="populateModal({{ $groupedEdits->first()->id }})">
                                         <button type="button" style="border:none; background:none; cursor:pointer;">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16"
@@ -52,7 +52,7 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                    </a>
+                                    </a> --}}
 
                                 </div>
                                 <h6 style="color: blue"><strong>{{ $groupedEdits->first()->product->productName }}</strong>
@@ -103,17 +103,17 @@
 @endsection
 
 {{-- JS --}}
-<script>
+{{-- <script>
     function populateModal(editHistoryId) {
         // Set the action URL dynamically with the correct ID
         var deleteForm = document.getElementById('deleteForm');
-        deleteForm.action = '/admin/delete/' + editHistoryId + '/edit/history'; // Adjusted the prefix to '/owner'
+        deleteForm.action = '/owner/delete/' + editHistoryId + '/edit/history'; // Adjusted the prefix to '/owner'
     }
-</script>
+</script> --}}
 
 
 <!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+{{-- <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -133,4 +133,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}

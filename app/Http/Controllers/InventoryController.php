@@ -13,12 +13,6 @@ class InventoryController extends Controller
 {
 
     /**
-     * 
-     * BUSINESS OWNERRRR
-     * 
-     */
-
-    /**
      * Display list of products
      */
     public function displayProduct(Request $request)
@@ -66,7 +60,28 @@ class InventoryController extends Controller
         $products = $productQuery->paginate(12);
         $category = Category::all();
 
-        return view('ManageInventoryView.owner.productList', ['products' => $products, 'category' => $category, 'sort' => $sort]);
+        if (Auth::user()->type === 'admin') {
+            return view('ManageInventoryView.admin.productList', [
+                'products' => $products,
+                'category' => $category,
+                'sort' => $sort
+            ]);
+        } elseif (Auth::user()->type === 'owner') {
+            return view('ManageInventoryView.owner.productList', [
+                'products' => $products,
+                'category' => $category,
+                'sort' => $sort
+            ]);
+        }
+        elseif (Auth::user()->type === 'staff') {
+            return view('ManageInventoryView.staff.productList', [
+                'products' => $products,
+                'category' => $category,
+                'sort' => $sort
+            ]);
+        }
+
+        // return view('ManageInventoryView.owner.productList', ['products' => $products, 'category' => $category, 'sort' => $sort]);
     }
 
 
@@ -76,7 +91,16 @@ class InventoryController extends Controller
     public function createProduct()
     {
         $category = Category::all();
-        return view('ManageInventoryView.owner.addProduct', compact('category'));
+
+        if (Auth::user()->type === 'admin') {
+            return view('ManageInventoryView.admin.addProduct', compact('category'));
+        } elseif (Auth::user()->type === 'owner') {
+            return view('ManageInventoryView.owner.addProduct', compact('category'));
+        }
+        elseif (Auth::user()->type === 'staff') {
+            return view('ManageInventoryView.staff.addProduct', compact('category'));
+        }
+        // return view('ManageInventoryView.owner.addProduct', compact('category'));
     }
 
     /**
@@ -122,7 +146,16 @@ class InventoryController extends Controller
 
         $product->save();
 
-        return redirect()->route('display.product.owner')->with('success', 'A Product Addedd Successfully!');
+        if (Auth::user()->type === 'admin') {
+            return redirect()->route('display.product.admin')->with('success', 'A Product Addedd Successfully!');
+        } elseif (Auth::user()->type === 'owner') {
+            return redirect()->route('display.product.owner')->with('success', 'A Product Addedd Successfully!');
+        }
+        elseif (Auth::user()->type === 'staff') {
+            return redirect()->route('display.product.staff')->with('success', 'A Product Addedd Successfully!');
+        }
+
+        // return redirect()->route('display.product.owner')->with('success', 'A Product Addedd Successfully!');
     }
 
     /**
@@ -133,11 +166,21 @@ class InventoryController extends Controller
         $product = Product::with('category')->where('id', $id)->first();
         $category = Category::all();
 
-        return view('ManageInventoryView.owner.editProduct', ['product' => $product, 'category' => $category]);
+        if (Auth::user()->type === 'admin') {
+            return view('ManageInventoryView.admin.editProduct', ['product' => $product, 'category' => $category]);
+        } elseif (Auth::user()->type === 'owner') {
+            return view('ManageInventoryView.owner.editProduct', ['product' => $product, 'category' => $category]);
+        }
+        elseif (Auth::user()->type === 'staff') {
+            return view('ManageInventoryView.staff.editProduct', ['product' => $product, 'category' => $category]);
+        }
+        
+
+        // return view('ManageInventoryView.owner.editProduct', ['product' => $product, 'category' => $category]);
     }
 
     /**
-     * Update product info
+     * Update edit product history info
      */
     public function updateProduct(Request $request, $id)
     {
@@ -244,8 +287,17 @@ class InventoryController extends Controller
             ]);
         }
 
-        // Redirect or return response
-        return redirect()->route('display.product.owner');
+        if (Auth::user()->type === 'admin') {
+            return redirect()->route('display.product.admin');
+        } elseif (Auth::user()->type === 'owner') {
+            return redirect()->route('display.product.owner');
+        }
+        elseif (Auth::user()->type === 'staff') {
+            return redirect()->route('display.product.staff');
+        }
+
+        
+        // return redirect()->route('display.product.owner');
     }
 
     /**
@@ -260,7 +312,16 @@ class InventoryController extends Controller
                 return \Carbon\Carbon::parse($item->created_at)->format('Y-m-d');
             });
 
-        return view('ManageInventoryView.owner.editProductHistory', ['editedProducts' => $editedProducts]);
+        if (Auth::user()->type === 'admin') {
+            return view('ManageInventoryView.admin.editProductHistory', ['editedProducts' => $editedProducts]);
+        } elseif (Auth::user()->type === 'owner') {
+            return view('ManageInventoryView.owner.editProductHistory', ['editedProducts' => $editedProducts]);
+        }
+        elseif (Auth::user()->type === 'staff') {
+            return view('ManageInventoryView.staff.editProductHistory', ['editedProducts' => $editedProducts]);
+        }
+
+        // return view('ManageInventoryView.owner.editProductHistory', ['editedProducts' => $editedProducts]);
     }
 
     /**
@@ -276,7 +337,13 @@ class InventoryController extends Controller
 
         $editedProduct->delete();
 
-        return redirect()->route('display.edit.history')->with('destroy', 'A Product Edit History has been deleted successfully');
+        if (Auth::user()->type === 'admin') {
+            return redirect()->route('display.edit.history.admin')->with('destroy', 'A Product Edit History has been deleted successfully');
+        } elseif (Auth::user()->type === 'owner') {
+            return redirect()->route('display.edit.history')->with('destroy', 'A Product Edit History has been deleted successfully');
+        }
+
+        // return redirect()->route('display.edit.history')->with('destroy', 'A Product Edit History has been deleted successfully');
     }
 
 
@@ -296,7 +363,13 @@ class InventoryController extends Controller
 
         $product->save();
 
-        return redirect()->route('display.product.owner')->with('destroy', 'A product has been removed successfully');
+        if (Auth::user()->type === 'admin') {
+            return redirect()->route('display.product.admin')->with('destroy', 'A product has been removed successfully');
+        } elseif (Auth::user()->type === 'owner') {
+            return redirect()->route('display.product.owner')->with('destroy', 'A product has been removed successfully');
+        }
+
+        // return redirect()->route('display.product.owner')->with('destroy', 'A product has been removed successfully');
     }
 
     /**
@@ -340,9 +413,18 @@ class InventoryController extends Controller
         }
 
         // Paginate the result
-        $product = $productQuery->paginate(5);
+        $product = $productQuery->paginate(12);
 
-        return view('ManageInventoryView.owner.productHistory', ['product' => $product, 'sort' => $sort]);
+        if (Auth::user()->type === 'admin') {
+            return view('ManageInventoryView.admin.productHistory', ['product' => $product, 'sort' => $sort]);
+        } elseif (Auth::user()->type === 'owner') {
+            return view('ManageInventoryView.owner.productHistory', ['product' => $product, 'sort' => $sort]);
+        }
+        elseif (Auth::user()->type === 'staff') {
+            return view('ManageInventoryView.staff.productHistory', ['product' => $product, 'sort' => $sort]);
+        }
+
+        // return view('ManageInventoryView.owner.productHistory', ['product' => $product, 'sort' => $sort]);
     }
 
 
@@ -355,24 +437,30 @@ class InventoryController extends Controller
 
         $product->delete();
 
-        return redirect()->route('display.product.history.owner')->with('destroy', 'A product record deleted');
+        if (Auth::user()->type === 'admin') {
+            return redirect()->route('display.product.history.admin')->with('destroy', 'A product record deleted');
+        } elseif (Auth::user()->type === 'owner') {
+            return redirect()->route('display.product.history.owner')->with('destroy', 'A product record deleted');
+        }
+
+        // return redirect()->route('display.product.history.owner')->with('destroy', 'A product record deleted');
     }
 
     /**
      * Display Product Alert (Low stock and Expired Date Alert)
      */
-    public function displayProductAlert()
-    {
-        $currentDate = now(); // Get the current date and time
+    // public function displayProductAlert()
+    // {
+    //     $currentDate = now(); // Get the current date and time
 
-        $product = Product::with('category')
-            ->where('productStatus', '1') // Only active products
-            ->where(function ($query) use ($currentDate) {
-                $query->whereColumn('productQuantity', '<=', 'stockAlert') // Low stock alert
-                    ->orWhere('expiredAlert', '<=', $currentDate); // Expired or nearing expiration
-            })
-            ->get();
+    //     $product = Product::with('category')
+    //         ->where('productStatus', '1') // Only active products
+    //         ->where(function ($query) use ($currentDate) {
+    //             $query->whereColumn('productQuantity', '<=', 'stockAlert') // Low stock alert
+    //                 ->orWhere('expiredAlert', '<=', $currentDate); // Expired or nearing expiration
+    //         })
+    //         ->get();
 
-        return view('ManageInventoryView.owner.alertProduct', ['product' => $product]);
-    }
+    //     return view('ManageInventoryView.owner.alertProduct', ['product' => $product]);
+    // }
 }

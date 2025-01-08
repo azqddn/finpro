@@ -1,17 +1,17 @@
-@extends('layouts.adminNav')
+@extends('layouts.staffNav')
 
 @section('content')
     <div class="" style="width:85%; height:auto; margin-left:15%; float:left">
         <div class="d-flex justify-content-center" style="width: 100%; height:auto; position:relative">
             {{-- Content --}}
             <div class="mt-4 row justify-content-center" style="width:70%; height:auto">
-                <h3 style="color: black">Add Product</h3>
+                <h3 style="">Add Product</h3>
                 <div class="card my-4">
                     <div class="card-body">
                         <div class="card-header">{{ __('Product Information') }}</div>
 
                         {{-- Product info --}}
-                        <form action="{{ url('admin/store/product') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ url('staff/store/product') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             {{-- Product Name --}}
                             <div class="row my-3">

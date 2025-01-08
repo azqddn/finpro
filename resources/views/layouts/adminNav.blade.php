@@ -64,8 +64,8 @@
                     </a>
                 </li>
                 {{-- Inventory --}}
-                <li id="menu-list" style="margin-bottom: 10px">
-                    <a href="#" class="nav-link link-dark">
+                <li id="menu-list" style="margin-bottom: 10px" class="{{ request()->routeIs('display.product.admin', 'add.product.admin', 'edit.product.admin' , 'display.product.history.admin', 'display.product.alert.admin', 'display.edit.history.admin') ? 'active' : '' }}">
+                    <a href="{{ route('display.product.admin') }}" class="nav-link link-dark">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
                             fill="currentColor">
                             <path
@@ -75,9 +75,9 @@
                         <span id="menu">Inventory</span>
                     </a>
                 </li>
-                {{-- Invoice --}}
-                <li id="menu-list" style="margin-bottom: 10px">
-                    <a href="#" class="nav-link link-dark">
+                {{-- Bookkeeping --}}
+                <li id="menu-list" style="margin-bottom: 10px" class="{{ request()->routeIs('display.record.admin') ? 'active' : '' }}">
+                    <a href="{{route('display.record.admin')}}" class="nav-link link-dark">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
                             fill="currentColor">
                             <path
