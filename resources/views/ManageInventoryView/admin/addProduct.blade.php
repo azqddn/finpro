@@ -155,7 +155,7 @@
                             {{-- Proof --}}
                             <div class="row my-3">
                                 <label for=""
-                                    class="col-md-4 col-form-label text-md-end">{{ __('Proof') }}</label>
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Proof :') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="productProof" type="file"

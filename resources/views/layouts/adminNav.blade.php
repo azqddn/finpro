@@ -88,8 +88,8 @@
                     </a>
                 </li>
                 {{-- Report --}}
-                <li id="menu-list" style="margin-bottom: 10px" class="{{ request()->routeIs('admin.report.create') ? 'active' : '' }}">
-                    <a href="{{route('admin.report.create')}}" class="nav-link link-dark">
+                <li id="menu-list" style="margin-bottom: 10px" class="{{ request()->routeIs('admin.report.create', 'admin.display.report') ? 'active' : '' }}">
+                    <a href="{{ route('admin.display.report') }}" class="nav-link link-dark">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
                             fill="currentColor">
                             <path

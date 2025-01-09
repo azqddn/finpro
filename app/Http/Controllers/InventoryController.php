@@ -435,6 +435,11 @@ class InventoryController extends Controller
     {
         $product = Product::where('id', $id)->first();
 
+        $filePath = public_path('product');
+        if ($product->productProof && file_exists($filePath . '/' . $product->productProof)) {
+            unlink($filePath . '/' . $product->productProof);
+        }
+
         $product->delete();
 
         if (Auth::user()->type === 'admin') {

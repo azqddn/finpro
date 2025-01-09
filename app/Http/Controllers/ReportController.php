@@ -41,16 +41,37 @@ class ReportController extends Controller
 
         $report = $reportQuery->paginate(10);
 
-        return view('ManageReportView.owner.reportList', ['report' => $report]);
+        if (Auth::user()->type === 'admin') {
+            return view('ManageReportView.admin.reportList', ['report' => $report]);
+        } elseif (Auth::user()->type === 'owner') {
+            return view('ManageReportView.owner.reportList', ['report' => $report]);
+        } elseif (Auth::user()->type === 'staff') {
+            return view('ManageReportView.staff.reportList', ['report' => $report]);
+        }
+
+        // return view('ManageReportView.owner.reportList', ['report' => $report]);
     }
 
     public function destroyReport(String $id)
     {
         $report = Report::find($id);
 
+        $filePath = public_path('report');
+        if ($report->reportFile && file_exists($filePath . '/' . $report->reportFile)) {
+            unlink($filePath . '/' . $report->reportFile);
+        }
+
         $report->delete();
 
-        return redirect()->route('owner.display.report')->with('destroy', 'A report deleted successfully!');
+        if (Auth::user()->type === 'admin') {
+            return redirect()->route('admin.display.report')->with('destroy', 'A report deleted successfully!');
+        } elseif (Auth::user()->type === 'owner') {
+            return redirect()->route('owner.display.report')->with('destroy', 'A report deleted successfully!');
+        } elseif (Auth::user()->type === 'staff') {
+            return redirect()->route('staff.display.report')->with('destroy', 'A report deleted successfully!');
+        }
+
+        // return redirect()->route('owner.display.report')->with('destroy', 'A report deleted successfully!');
     }
 
     // Display the report creation view
@@ -213,8 +234,19 @@ class ReportController extends Controller
             'reportFile' => $fileName,
         ]);
 
-        return redirect()->route('report.download', ['fileName' => $fileName])
-            ->with('success', 'Report generated successfully!');
+        if (Auth::user()->type === 'admin') {
+            return redirect()->route('admin.report.download', ['fileName' => $fileName])
+                ->with('success', 'Report generated successfully!');
+        } elseif (Auth::user()->type === 'owner') {
+            return redirect()->route('report.download', ['fileName' => $fileName])
+                ->with('success', 'Report generated successfully!');
+        } elseif (Auth::user()->type === 'staff') {
+            return redirect()->route('staff.report.download', ['fileName' => $fileName])
+                ->with('success', 'Report generated successfully!');
+        }
+
+        // return redirect()->route('report.download', ['fileName' => $fileName])
+        //     ->with('success', 'Report generated successfully!');
     }
 
 

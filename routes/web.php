@@ -76,6 +76,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
         Route::get('/report/create', [ReportController::class, 'createReport'])->name('admin.report.create');
         Route::post('/report/generate', [ReportController::class, 'generate'])->name('admin.report.generate');
         Route::get('/report/download/{fileName}', [ReportController::class, 'download'])->name('admin.report.download');  
+        Route::get('/report/list', [ReportController::class,'displayReport'])->name('admin.display.report');  
+        Route::delete('/delete/{id}/report', [ReportController::class, 'destroyReport'])->name('admin.destroy.report');
 
     });
 });
@@ -163,7 +165,9 @@ Route::middleware(['auth', 'user-access:staff'])->group(function () {
         //Manage Report
         Route::get('/report/create', [ReportController::class, 'createReport'])->name('staff.report.create');
         Route::post('/report/generate', [ReportController::class, 'generate'])->name('staff.report.generate');
-        Route::get('/report/download/{fileName}', [ReportController::class, 'download'])->name('staff.report.download');  
+        Route::get('/report/download/{fileName}', [ReportController::class, 'download'])->name('staff.report.download');
+        Route::get('/report/list', [ReportController::class,'displayReport'])->name('staff.display.report');  
+        Route::delete('/delete/{id}/report', [ReportController::class, 'destroyReport'])->name('staff.destroy.report');
 
     });
 });;

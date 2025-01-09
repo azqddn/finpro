@@ -7,15 +7,15 @@
             <div class="mt-4 me-3 row justify-content-center" style="width:65%; height:auto; margin-left:20px">
                 @if (session('success'))
                     <div class="alert alert-success">
-                        {{ session('success') }}
+                        {{ session('success') }};
                     </div>
                 @elseif (session('destroy'))
                     <div class="alert alert-danger">
-                        {{ session('destroy') }}
+                        {{ session('destroy') }};
                     </div>
                 @endif
                 <h3 class="mb-4">
-                    Report
+                    Create Report
                 </h3>
 
                 {{-- Main --}}
@@ -32,29 +32,20 @@
                                 <option value="inventory">Inventory Report</option>
                             </select>
                         </div>
-                    
-                        <div class="form-group mb-3" id="durationTypeWrapper">
+
+                        <div class="form-group mb-3">
                             <label for="durationType">Duration Type:</label>
                             <select class="form-select" id="durationType" name="duration_type">
-                                <option value="daily">Daily</option> <!-- Visible for Financial only -->
-                                <option value="weekly">Weekly</option>
+                                <option value="daily">Daily</option>
                                 <option value="monthly">Monthly</option>
                             </select>
                         </div>
-                    
-                        <!-- Daily Field (for financial only) -->
+
+                        <!-- Dynamic Fields -->
                         <div class="form-group mb-3" id="dailyField" style="display: none;">
                             <label for="date">Select Date:</label>
                             <input type="date" class="form-control" name="date" id="date">
                         </div>
-                    
-                        <!-- Weekly Field -->
-                        <div class="form-group mb-3" id="weeklyField" style="display: none;">
-                            <label for="week">Select Start of the Week:</label>
-                            <input type="date" class="form-control" name="date" id="week">
-                        </div>
-                    
-                        <!-- Monthly Field -->
                         <div class="form-group mb-3" id="monthlyField" style="display: none;">
                             <label for="month">Select Month:</label>
                             <select class="form-select" name="month" id="month">
@@ -63,7 +54,7 @@
                                 @endfor
                             </select>
                         </div>
-                    
+
                         <button type="submit" class="btn btn-primary mt-3 me-0">Generate Report</button>
                     </form>
 
@@ -76,34 +67,9 @@
     </div>
 
     <script>
-        document.getElementById('reportType').addEventListener('change', function() {
-            const reportType = this.value;
-            const durationTypeWrapper = document.getElementById('durationTypeWrapper');
-            const durationType = document.getElementById('durationType');
-    
-            if (reportType === 'inventory') {
-                durationType.innerHTML = `
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                `;
-            } else {
-                durationType.innerHTML = `
-                    <option value="daily">Daily</option>
-                    <option value="monthly">Monthly</option>
-                `;
-            }
-    
-            document.getElementById('dailyField').style.display = 'none';
-            document.getElementById('weeklyField').style.display = 'none';
-            document.getElementById('monthlyField').style.display = 'none';
-        });
-    
         document.getElementById('durationType').addEventListener('change', function() {
-            const value = this.value;
-    
-            document.getElementById('dailyField').style.display = value === 'daily' ? 'block' : 'none';
-            document.getElementById('weeklyField').style.display = value === 'weekly' ? 'block' : 'none';
-            document.getElementById('monthlyField').style.display = value === 'monthly' ? 'block' : 'none';
+            document.getElementById('dailyField').style.display = this.value === 'daily' ? 'block' : 'none';
+            document.getElementById('monthlyField').style.display = this.value === 'monthly' ? 'block' : 'none';
         });
     </script>
 @endsection

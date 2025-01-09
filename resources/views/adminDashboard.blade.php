@@ -108,11 +108,11 @@
 
                         {{-- Product Sales Trend --}}
                         <div class="me-3 p-3 d-flex justify-content-center text-center"
-                            style="background-color: white; border-radius: 5px; box-shadow: 2px 3px 6px #4b4b4b42; width:50%; height:300px">
+                            style="background-color: white; border-radius: 5px; box-shadow: 2px 3px 6px #4b4b4b42; width:50%; height:auto">
                             <div class="m-2" style="width:100%; height:100%">
                                 <p class="h5">Product Sales Trend</p>
                                 <div class="d-flex justify-content-center align-items-center"
-                                    style="width: 100%; height:85%">
+                                    style="width: 100%; height: 800px;">
                                     <canvas id="productSalesChart"></canvas>
                                 </div>
                             </div>
@@ -120,11 +120,11 @@
 
                         {{-- Product Quantity Sold Trend --}}
                         <div class="p-3 d-flex justify-content-center text-center"
-                            style="background-color: white; border-radius: 5px; box-shadow: 2px 3px 6px #4b4b4b42; width:50%; height:300px">
+                            style="background-color: white; border-radius: 5px; box-shadow: 2px 3px 6px #4b4b4b42; width:50%; height:auto">
                             <div class="" style="width:100%; height:100%">
                                 <p class="h5">Product Quantity Sold Trend</p>
                                 <div class="d-flex justify-content-center align-items-center"
-                                    style="width: 100%; height:90%;">
+                                    style="width: 100%; height: 800px;">
                                     <canvas id="productQuantityChart"></canvas>
                                 </div>
                             </div>
@@ -219,9 +219,23 @@
                 },
                 options: {
                     indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
                     scales: {
                         x: {
                             beginAtZero: true
+                        },
+                        y: {
+                            ticks: {
+                                autoSkip: false, // Ensure all labels are displayed
+                                maxTicksLimit: 25 // Maximum number of labels to display
+                            }
                         }
                     }
                 }
@@ -243,9 +257,23 @@
                 },
                 options: {
                     indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
                     scales: {
                         x: {
                             beginAtZero: true
+                        },
+                        y: {
+                            ticks: {
+                                autoSkip: false, // Ensure all labels are displayed
+                                maxTicksLimit: 25 // Maximum number of labels to display
+                            }
                         }
                     }
                 }

@@ -7,6 +7,7 @@ use App\Models\Record;
 use App\Models\Product;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -47,15 +48,16 @@ class HomeController extends Controller
             $months[] = date('F', mktime(0, 0, 0, $record->month, 1)); // Month name
             $revenues[] = $record->totalRevenue ?? 0;
             $expenses[] = $record->totalExpenses ?? 0;
-            $balances[] = $record->totalBalance ?? 0;
+            $balances[] = $record->totalRevenue-$record->totalExpenses ?? 0;
         }
 
         // Fetch product trends
         $products = Product::select(
             'productName',
             'transactions',
-            'productSell'
-        )->whereNotNull('transactions')->get();
+            'productSell',
+            DB::raw('(transactions * productSell) as totalSales')
+        )->whereNotNull('transactions')->orderBy('totalSales', 'desc')->take(25)->get();
 
         $productNames = [];
         $productSales = [];
@@ -119,15 +121,16 @@ class HomeController extends Controller
             $months[] = date('F', mktime(0, 0, 0, $record->month, 1)); // Month name
             $revenues[] = $record->totalRevenue ?? 0;
             $expenses[] = $record->totalExpenses ?? 0;
-            $balances[] = $record->totalBalance ?? 0;
+            $balances[] = $record->totalRevenue-$record->totalExpenses ?? 0;
         }
 
         // Fetch product trends
         $products = Product::select(
             'productName',
             'transactions',
-            'productSell'
-        )->where('productStatus', 1)->whereNotNull('transactions')->get();
+            'productSell',
+            DB::raw('(transactions * productSell) as totalSales')
+        )->whereNotNull('transactions')->orderBy('totalSales', 'desc')->take(25)->get();
 
         $productNames = [];
         $productSales = [];
@@ -185,15 +188,16 @@ class HomeController extends Controller
             $months[] = date('F', mktime(0, 0, 0, $record->month, 1)); // Month name
             $revenues[] = $record->totalRevenue ?? 0;
             $expenses[] = $record->totalExpenses ?? 0;
-            $balances[] = $record->totalBalance ?? 0;
+            $balances[] = $record->totalRevenue-$record->totalExpenses ?? 0;
         }
 
         // Fetch product trends
         $products = Product::select(
             'productName',
             'transactions',
-            'productSell'
-        )->whereNotNull('transactions')->get();
+            'productSell',
+            DB::raw('(transactions * productSell) as totalSales')
+        )->whereNotNull('transactions')->orderBy('totalSales', 'desc')->take(25)->get();
 
         $productNames = [];
         $productSales = [];
