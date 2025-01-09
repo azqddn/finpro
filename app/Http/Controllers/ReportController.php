@@ -15,16 +15,37 @@ use Illuminate\Support\Facades\Storage;
 class ReportController extends Controller
 {
     //Display report list
-    public function displayReport()
+    public function displayReport(Request $request)
     {
-        $reportQuery = Report::with('user')->orderBy('created_at', 'desc');
+        $reportQuery = Report::with('user');
 
-        $report = $reportQuery->paginate(4);
+        // Handle Search Function
+        $search = $request->input('search');
+        if ($search) {
+            $reportQuery->where('reportTitle', 'LIKE', "%{$search}%");
+        }
+
+        //Handle Sorting
+        $sort = $request->input('sort');
+        switch ($sort) {
+            case 'oldest_first':
+                $reportQuery->orderBy('created_at', 'asc');
+                break;
+            case 'latest_first':
+                $reportQuery->orderBy('created_at', 'desc');
+                break;
+            default:
+                $reportQuery->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $report = $reportQuery->paginate(10);
 
         return view('ManageReportView.owner.reportList', ['report' => $report]);
     }
 
-    public function destroyReport(String $id){
+    public function destroyReport(String $id)
+    {
         $report = Report::find($id);
 
         $report->delete();

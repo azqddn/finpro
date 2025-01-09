@@ -4,7 +4,7 @@
     <div style="width: 85%; height:auto; margin-left:15%; float:left">
         <div class="d-flex justify-content-center" style="width: 100%; height:auto">
             {{-- Content --}}
-            <div class="mt-4 me-3 row justify-content-center" style="width:65%; height:auto; margin-left:20px">
+            <div class="mt-4 me-3 mb-5 row justify-content-center" style="width:70%; height:auto; margin-left:20px">
                 @if (session('success'))
                     <div class="alert alert-success">
                         {{ session('success') }}
@@ -22,9 +22,33 @@
                 <div class="mt-2 row justify-content-center align-items-center"
                     style="width: 100%; height:auto; background-color:white; border-radius:10px; box-shadow: 2px 3px 6px #4b4b4b42;">
 
-                    {{-- border:1px solid black --}}
                     {{-- Top --}}
-                    <div class="my-3 d-flex justify-content-between align-items-center" style="">
+                    <div class="my-3 mt-4 px-0 d-flex justify-content-between align-items-center" style="">
+
+                        {{-- Dropdown --}}
+                        <div class="dropdown " style="margin-left: auto; margin-right: 0px;">
+                            <a class="btn dropdown-toggle pb-1" href="#" role="button" id="dropdownMenuLink"
+                                data-bs-toggle="dropdown" aria-expanded="false" style="width: 60px; height:35px">
+                                <svg width="22" height="auto" viewBox="0 0 16 10" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M14.75 2.25H1.25C1.05109 2.25 0.860322 2.17098 0.71967 2.03033C0.579018 1.88968 0.5 1.69891 0.5 1.5C0.5 1.30109 0.579018 1.11032 0.71967 0.96967C0.860322 0.829018 1.05109 0.75 1.25 0.75H14.75C14.9489 0.75 15.1397 0.829018 15.2803 0.96967C15.421 1.11032 15.5 1.30109 15.5 1.5C15.5 1.69891 15.421 1.88968 15.2803 2.03033C15.1397 2.17098 14.9489 2.25 14.75 2.25ZM12.25 5.75H3.75C3.55109 5.75 3.36032 5.67098 3.21967 5.53033C3.07902 5.38968 3 5.19891 3 5C3 4.80109 3.07902 4.61032 3.21967 4.46967C3.36032 4.32902 3.55109 4.25 3.75 4.25H12.25C12.4489 4.25 12.6397 4.32902 12.7803 4.46967C12.921 4.61032 13 4.80109 13 5C13 5.19891 12.921 5.38968 12.7803 5.53033C12.6397 5.67098 12.4489 5.75 12.25 5.75ZM9.25 9.25H6.75C6.55109 9.25 6.36032 9.17098 6.21967 9.03033C6.07902 8.88968 6 8.69891 6 8.5C6 8.30109 6.07902 8.11032 6.21967 7.96967C6.36032 7.82902 6.55109 7.75 6.75 7.75H9.25C9.44891 7.75 9.63968 7.82902 9.78033 7.96967C9.92098 8.11032 10 8.30109 10 8.5C10 8.69891 9.92098 8.88968 9.78033 9.03033C9.63968 9.17098 9.44891 9.25 9.25 9.25Z"
+                                        fill="#292929" />
+                                </svg>
+                            </a>
+
+                            <!-- Dropdown Menu -->
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('owner.display.report', ['sort' => 'oldest_first']) }}">Oldest
+                                        First</a>
+                                        <a class="dropdown-item"
+                                        href="{{ route('owner.display.report', ['sort' => 'latest_first']) }}">Latest
+                                        First</a>
+                                </li>
+                            </ul>
+                        </div>
 
                         {{-- Search --}}
                         <div class="mt-2 d-flex justify-content-center align-items-center ms-5"
@@ -66,7 +90,7 @@
 
                     </div>
 
-                    <table id="report-list-table" class="table table-bordered m-3">
+                    <table id="report-list-table" class="table table-bordered m-4">
                         <thead>
                             <tr>
                                 <th scope="col">No</th>
@@ -94,7 +118,7 @@
                                             </span>
                                         </td>
                                         {{-- -------- --}}
-                                        
+
                                         <td>{{ $item->user->name }}</td>
 
                                         {{-- Report file --}}
