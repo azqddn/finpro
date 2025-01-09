@@ -99,9 +99,9 @@
                 </li>
 
                 {{-- Report --}}
-                <li id="menu-list" class="{{ request()->routeIs('owner.report.create') ? 'active' : '' }}"
+                <li id="menu-list" class="{{ request()->routeIs('owner.report.create', 'owner.display.report') ? 'active' : '' }}"
                     style="margin-bottom: 10px">
-                    <a href="{{ route('owner.report.create') }}" class="nav-link link-dark">
+                    <a href="{{ route('owner.display.report') }}" class="nav-link link-dark">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
                             fill="currentColor">
                             <path

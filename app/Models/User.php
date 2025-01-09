@@ -88,4 +88,9 @@ class User extends Authenticatable
         return $this->hasMany(Record::class, 'id');
     }
 
+    public function Report()
+    {
+        return $this->hasMany(Report::class. 'id');
+    }
+
 }

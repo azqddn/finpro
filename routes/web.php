@@ -1,15 +1,16 @@
 <?php
 
+use App\Models\User;
+use App\Models\Report;
+use Faker\Guesser\Name;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\BookkeepingController;
-use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ReportController;
-use App\Models\User;
-use Faker\Guesser\Name;
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\BookkeepingController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /**
  * Logout redirect
@@ -118,8 +119,9 @@ Route::middleware(['auth', 'user-access:owner'])->group(function () {
         //Manage Report
         Route::get('/report/create', [ReportController::class, 'createReport'])->name('owner.report.create');
         Route::post('/report/generate', [ReportController::class, 'generate'])->name('owner.report.generate');
-        Route::get('/report/download/{fileName}', [ReportController::class, 'download'])->name('report.download');   
-        
+        Route::get('/report/download/{fileName}', [ReportController::class, 'download'])->name('report.download'); 
+        Route::get('/report/list', [ReportController::class,'displayReport'])->name('owner.display.report');  
+        Route::delete('/delete/{id}/report', [ReportController::class, 'destroyReport'])->name('owner.destroy.report');
     });
 });
 
