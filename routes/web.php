@@ -57,7 +57,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
         Route::get('/product/list', [InventoryController::class, 'displayProduct'])->name('display.product.admin');
         Route::get('/add/product', [InventoryController::class, 'createProduct'])->name('add.product.admin');
         Route::post('/store/product', [InventoryController::class, 'storeProduct'])->name('store.product.admin');
-        Route::post('/remove/{id}/product', [InventoryCOntroller::class, 'removeProduct'])->name('remove.product.admin');
+        Route::post('/remove/{id}/product', [InventoryController::class, 'removeProduct'])->name('remove.product.admin');
         Route::get('/product/history', [InventoryController::class, 'displayProductHistory'])->name('display.product.history.admin');
         Route::get('/destroy/{id}/product', [InventoryController::class, 'destroyProduct'])->name('destroy.product.admin');
         Route::get('/edit/{id}/product', [InventoryController::class, 'editProduct'])->name('edit.product.admin');
@@ -103,7 +103,7 @@ Route::middleware(['auth', 'user-access:owner'])->group(function () {
         Route::get('/product/list', [InventoryController::class, 'displayProduct'])->name('display.product.owner');
         Route::get('/add/product', [InventoryController::class, 'createProduct'])->name('add.product.owner');
         Route::post('/store/product', [InventoryController::class, 'storeProduct'])->name('store.product.owner');
-        Route::post('/remove/{id}/product', [InventoryCOntroller::class, 'removeProduct'])->name('remove.product.owner');
+        Route::post('/remove/{id}/product', [InventoryController::class, 'removeProduct'])->name('remove.product.owner');
         Route::get('/product/history', [InventoryController::class, 'displayProductHistory'])->name('display.product.history.owner');
         Route::get('/destroy/{id}/product', [InventoryController::class, 'destroyProduct'])->name('destroy.product.owner');
         Route::get('/edit/{id}/product', [InventoryController::class, 'editProduct'])->name('edit.product.owner');
@@ -148,7 +148,7 @@ Route::middleware(['auth', 'user-access:staff'])->group(function () {
         Route::get('/product/list', [InventoryController::class, 'displayProduct'])->name('display.product.staff');
         Route::get('/add/product', [InventoryController::class, 'createProduct'])->name('add.product.staff');
         Route::post('/store/product', [InventoryController::class, 'storeProduct'])->name('store.product.staff');
-        Route::post('/remove/{id}/product', [InventoryCOntroller::class, 'removeProduct'])->name('remove.product.staff');
+        Route::post('/remove/{id}/product', [InventoryController::class, 'removeProduct'])->name('remove.product.staff');
         Route::get('/product/history', [InventoryController::class, 'displayProductHistory'])->name('display.product.history.staff');
         Route::get('/destroy/{id}/product', [InventoryController::class, 'destroyProduct'])->name('destroy.product.staff');
         Route::get('/edit/{id}/product', [InventoryController::class, 'editProduct'])->name('edit.product.staff');
