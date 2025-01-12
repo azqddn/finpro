@@ -7,11 +7,11 @@
             <div class="mt-4 row justify-content-center" style="width:70%; height:auto">
                 @if (session('success'))
                     <div class="alert alert-success">
-                        {{ session('success') }};
+                        {{ session('success') }}
                     </div>
                 @elseif (session('destroy'))
                     <div class="alert alert-danger">
-                        {{ session('destroy') }};
+                        {{ session('destroy') }}
                     </div>
                 @endif
                 <h3 style="color: black">User Profile</h3>

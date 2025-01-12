@@ -100,7 +100,7 @@
                         {{-- Low Quantity Alert --}}
                         <div class="row my-3">
                             <label for=""
-                                class="col-md-4 col-form-label text-md-end">{{ __('Low Stock Alert :') }}</label>
+                                class="col-md-4 col-form-label text-md-end">{{ __('Reorder Point :') }}</label>
 
                             <div class="col-md-6">
                                 <input id="stockAlert" type="text"
@@ -174,7 +174,7 @@
                         {{-- Proof --}}
                         <div class="row my-3">
                             <label for=""
-                                class="col-md-4 col-form-label text-md-end">{{ __('Proof of Changes') }}</label>
+                                class="col-md-4 col-form-label text-md-end">{{ __('Proof of Changes :') }}</label>
 
                             <div class="col-md-6">
                                 <input id="editProof" type="file"

@@ -4,11 +4,11 @@
     <div class="container" style="width: 85%; margin-left: 15%">
         @if (session('success'))
             <div class="alert alert-success">
-                {{ session('success') }};
+                {{ session('success') }}
             </div>
         @elseif (session('destroy'))
             <div class="alert alert-danger">
-                {{ session('destroy') }};
+                {{ session('destroy') }}
             </div>
         @endif
 
@@ -62,7 +62,7 @@
                             <th scope="col" style="background-color: rgb(28, 28, 207); color:white;">Phone</th>
                             <th scope="col" style="background-color: rgb(28, 28, 207); color:white;">Role</th>
                             <th scope="col" style="background-color: rgb(28, 28, 207); color:white;">Photo</th>
-                            <th scope="col" style="background-color: rgb(28, 28, 207); color:white;"></th>
+                            <th scope="col" style="background-color: rgb(28, 28, 207); color:white;">Action</th>
                         </tr>
                     </thead>
                     <tbody>

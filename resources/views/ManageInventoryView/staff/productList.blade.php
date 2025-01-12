@@ -153,6 +153,7 @@
                                     Trend
                                 </th>
                                 <th scope="col" style="border: 1px solid #dee2e6; ; width:35px">
+                                    Action
                                 </th>
                             </tr>
                         </thead>
@@ -186,7 +187,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $product->transactions }}</td>
-                                    <td style="border: 1px solid #dee2e6;">
+                                    <td class="text-center" style="border: 1px solid #dee2e6;">
                                         <div class="dropdown">
                                             <button class="btn btn-link p-0" type="button" id="dropdownMenuButton"
                                                 data-bs-toggle="dropdown" aria-expanded="false" style="color: #000000;">

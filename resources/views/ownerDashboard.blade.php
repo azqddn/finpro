@@ -50,7 +50,7 @@
                         <div class="me-3 p-3 d-flex justify-content-center text-center"
                             style="background-color: white; border-radius: 5px; box-shadow: 2px 3px 6px #4b4b4b42; width:50%; height:300px">
                             <div class="m-2" style="width:100%; height:100%">
-                                <p class="h5">Monthly Balance</p>
+                                <p class="h5">Net Balance</p>
                                 <div class="d-flex justify-content-center align-items-center"
                                     style="width: 100%; height:85%">
                                     <canvas id="balanceChart"></canvas>
